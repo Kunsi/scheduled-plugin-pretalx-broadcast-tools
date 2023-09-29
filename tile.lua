@@ -248,7 +248,10 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         local info_line = talk.room
 
         if show_speakers and #talk.persons then
-            info_line = info_line .. table.concat(talk.persons, ", ")
+            local joiner = ({
+                de = "mit",
+            })[talk.locale] or "with"
+            info_line = info_line .. " " .. joiner .. " " .. table.concat(talk.persons, ", ")
         end
 
         local info_lines = wrap(
