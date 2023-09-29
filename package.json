@@ -1,0 +1,14 @@
+{
+    "name": "pretalx-broadcast-tools",
+    "author": "git@kunsmann.eu",
+    "desc": "Shows information provided by pretalx-broadcast-tools",
+    "nesting": {
+        "parents": ["scheduled-plugin"],
+        "childs": []
+    },
+    "platforms": ["pi/epoch-1", "pi/epoch-2"],
+    "offline": {
+        "support": "no",
+        "info": "Needs to fetch remote content"
+    }
+}

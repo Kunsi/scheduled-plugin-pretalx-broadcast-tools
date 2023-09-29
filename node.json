@@ -1,0 +1,58 @@
+{
+    "name": "Plugin: pretalx-broadcast-tools",
+    "permissions": {
+        "network": "Has to fetch schedule from remote site"
+    },
+    "options": [{
+        "title": "Design",
+        "type": "section"
+    }, {
+        "title": "Font",
+        "ui_width": 6,
+        "name": "font",
+        "type": "font",
+        "default": "silkscreen.ttf"
+    }, {
+        "title": "Show Language",
+        "ui_width": 4,
+        "name": "show_language",
+        "type": "boolean",
+        "default": true
+    }, {
+        "title": "Show Track",
+        "ui_width": 4,
+        "name": "show_track",
+        "type": "boolean",
+        "hint": "Show colored bars in 'all talks', track name in 'next talk'",
+        "default": true
+    }, {
+        "title": "Schedule",
+        "type": "section"
+    }, {
+        "title": "Event URL",
+        "name": "event_url",
+        "type": "string",
+        "default": "https://pretalx.example.com/my-super-cool-event/"
+    }, {
+        "title": "Rooms",
+        "name": "rooms",
+        "doc_link": true,
+        "type": "list",
+        "itemname": "Room",
+        "hint": "Define all rooms in your schedule and assign them to devices",
+        "items": [{
+            "title": "Room Name",
+            "ui_width": 3,
+            "name": "name",
+            "type": "string",
+            "hint": "Name of this room in your events native language",
+            "default": ""
+        }, {
+            "title": "Serial",
+            "ui_width": 3,
+            "name": "serial",
+            "type": "device",
+            "default": ""
+        }]
+    }]
+}

@@ -1,0 +1,118 @@
+#!/usr/bin/python
+import sys
+import time
+import traceback
+from datetime import datetime, timedelta
+
+import pytz
+from requests import get
+
+from hosted import config, node
+
+config.restart_on_update()
+
+
+def log(msg):
+    sys.stderr.write("[pretalx] {}\n".format(msg))
+
+
+def idle(seconds, event_start, event_tz):
+    end = time.time() + seconds
+    log("sleeping for {} seconds".format(seconds))
+    while time.time() < end:
+        send_data = {
+            'day': '??',
+        }
+        if event_start is not None:
+            timezone = pytz.timezone(event_tz)
+            event_now = datetime.now(timezone)
+            utc_now = datetime.now(pytz.utc)
+
+            utc_offset = (event_now - utc_now).total_seconds()
+
+            day_zero = event_start.replace(
+                hour=0,
+                minute=0,
+                second=0,
+                tzinfo=timezone
+            ) - timedelta(days=1)
+
+            day_info = event_now - day_zero
+
+            log("Day0: {}".format(day_zero.isoformat()))
+            log("NOW:  {}".format(event_now.isoformat()))
+
+            send_data['day'] = day_info.days
+            send_data['time'] = int(time.time() + utc_offset)
+        else:
+            send_data['time'] = time.time()
+
+        for k,v in send_data.items():
+            node.send_raw('root/plugin/pretalx/{}:{}'.format(k, v))
+            node.send_raw('root/plugin/pretalx-broadcast-tools/{}:{}'.format(k, v))
+        time.sleep(1)
+
+
+def main():
+    event_info = None
+    event_start = None
+    schedule = None
+    event_tz = 'UTC'
+
+    while True:
+        event_url = config["event_url"]
+        if not event_url.endswith("/"):
+            event_url = event_url + "/"
+        if "example.com" in event_url:
+            log("default event url, waiting for config update")
+            # sleep forever, service will get restarted if the config
+            # changes.
+            time.sleep(99999999)
+
+        log("event url: {}".format(event_url))
+
+        try:
+            r = get(
+                event_url + "p/broadcast-tools/event.json",
+            )
+            r.raise_for_status()
+        except Exception as e:
+            log("updating event info failed: {}".format(repr(e)))
+            # Only print the error message. If we have fetched the event
+            # info json blob atleast once, we have all the information
+            # we need.
+        else:
+            event_info = r.json()
+            node.write_json("event.json", event_info)
+            log("updated event info json")
+
+        try:
+            r = get(
+                event_url + "p/broadcast-tools/schedule.json",
+            )
+            r.raise_for_status()
+        except Exception as e:
+            log("updating schedule failed: {}".format(repr(e)))
+            # Only print the error message. If we have fetched the schedule
+            # info json blob atleast once, we have all the information
+            # we need.
+        else:
+            schedule = r.json()
+            for talk in schedule['talks']:
+                talk['start_str'] = datetime.fromtimestamp(talk['start_ts']).strftime('%H:%M')
+            node.write_json("schedule.json", schedule)
+            log("updated schedule json")
+
+        if event_info is not None:
+            event_start = datetime.strptime(event_info["start"], "%Y-%m-%d")
+            event_tz = event_info['timezone']
+
+        idle(30, event_start, event_tz)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except:
+        traceback.print_exc()
+        time.sleep(30)
