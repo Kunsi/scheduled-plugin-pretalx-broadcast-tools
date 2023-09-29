@@ -82,7 +82,7 @@ var config = {
     mode: ChildTile.config_value('mode', 'all_talks'),
     color: ChildTile.config_value('color', '#ffffff'),
     font_size: ChildTile.config_value('font_size', 70, parseInt),
-    all_names: ChildTile.config_value('all_names', true),
+    all_speakers: ChildTile.config_value('all_speakers', true),
     next_abstract: ChildTile.config_value('next_abstract', false),
     day_align: ChildTile.config_value('day_align', 'left'),
     day_template: ChildTile.config_value('day_template', 'Day %d'),
