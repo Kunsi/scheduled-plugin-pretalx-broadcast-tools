@@ -340,7 +340,7 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
         elseif align == "center" then
             x = (x1 + x2 - w) / 2
         end
-        font:write(x1, y1, line, font_size, r,g,b)
+        font:write(x, y1, line, font_size, r,g,b)
     end
 end
 

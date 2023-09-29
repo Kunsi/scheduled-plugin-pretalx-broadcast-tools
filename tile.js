@@ -70,7 +70,7 @@ var config = {
         </div>
       </template>
       <template v-if='mode == "day"'>
-        <h4>Clock options</h4>
+        <h4>Day options</h4>
         <div class='row'>
           <div class='col-xs-3'>
             <select class='btn btn-default' v-model="day_align">
