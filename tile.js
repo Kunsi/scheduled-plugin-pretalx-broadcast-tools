@@ -68,6 +68,7 @@ var config = {
             </select>
           </div>
         </div>
+      </template>
       <template v-if='mode == "day"'>
         <h4>Clock options</h4>
         <div class='row'>
