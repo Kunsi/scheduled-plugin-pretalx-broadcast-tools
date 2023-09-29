@@ -309,11 +309,18 @@ end
 
 local function view_room(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
+    local align = config.room_align or "left"
     local r,g,b = helper.parse_rgb(config.color or "#ffffff")
 
     for now in api.frame_between(starts, ends) do
-        local line = current_room
-        font:write(x1, y1, line, font_size, r,g,b)
+        local x = x1
+        local w = font:width(current_room, font_size)
+        if align == "right" then
+            x = x2 - w
+        elseif align == "center" then
+            x = (x1 + x2 - w) / 2
+        end
+        font:write(x, y1, current_room, font_size, r,g,b)
     end
 end
 
@@ -324,16 +331,16 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
     local template = config.day_template or "Day %d"
 
     for now in api.frame_between(starts, ends) do
+        local x = x1
         local line = string.format(template, day)
-        if align == "left" then
-            font:write(x1, y1, line, font_size, r,g,b)
+        local w = font:width(line, font_size)
+
+        if align == "right" then
+            x = x2 - w
         elseif align == "center" then
-            local w = font:width(line, font_size)
-            font:write((x1+x2-w) / 2, y1, line, font_size, r,g,b)
-        else
-            local w = font:width(line, font_size)
-            font:write(x2-w, y1, line, font_size, r,g,b)
+            x = (x1 + x2 - w) / 2
         end
+        font:write(x1, y1, line, font_size, r,g,b)
     end
 end
 

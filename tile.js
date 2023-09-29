@@ -57,6 +57,17 @@ var config = {
           </div>
         </div>
       </template>
+      <template v-if='mode == "room"'>
+        <h4>room options</h4>
+        <div class='row'>
+          <div class='col-xs-3'>
+            <select class='btn btn-default' v-model="room_align">
+              <option value="left">Align left</option>
+              <option value="center">Align centered</option>
+              <option value="right">Align right</option>
+            </select>
+          </div>
+        </div>
       <template v-if='mode == "day"'>
         <h4>Clock options</h4>
         <div class='row'>
@@ -84,6 +95,7 @@ var config = {
     font_size: ChildTile.config_value('font_size', 70, parseInt),
     all_speakers: ChildTile.config_value('all_speakers', true),
     next_abstract: ChildTile.config_value('next_abstract', false),
+    room_align: ChildTile.config_value('room_align', 'left'),
     day_align: ChildTile.config_value('day_align', 'left'),
     day_template: ChildTile.config_value('day_template', 'Day %d'),
   }
