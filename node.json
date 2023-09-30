@@ -8,7 +8,7 @@
         "type": "section"
     }, {
         "title": "Font",
-        "ui_width": 6,
+        "ui_width": 12,
         "name": "font",
         "type": "font",
         "default": "silkscreen.ttf"
@@ -23,7 +23,6 @@
         "ui_width": 4,
         "name": "show_track",
         "type": "boolean",
-        "hint": "Show colored bars in 'all talks', track name in 'next talk'",
         "default": true
     }, {
         "title": "Schedule",
@@ -42,14 +41,14 @@
         "hint": "Define all rooms in your schedule and assign them to devices",
         "items": [{
             "title": "Room Name",
-            "ui_width": 3,
+            "ui_width": 6,
             "name": "name",
             "type": "string",
             "hint": "Name of this room in your events native language",
             "default": ""
         }, {
             "title": "Serial",
-            "ui_width": 3,
+            "ui_width": 6,
             "name": "serial",
             "type": "device",
             "default": ""
