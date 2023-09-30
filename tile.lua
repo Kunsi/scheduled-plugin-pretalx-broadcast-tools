@@ -98,7 +98,7 @@ local function check_next_talks()
 
         -- Ignore all talks that started long before now or have already
         -- ended here. We don't want to announce these.
-        if talk.start_ts > min_start and talk.end_ts > time then
+        if (talk.start_ts > min_start and talk.end_ts > time) or talk.end_ts > time then
             -- is this in *this* room, or somewhere else?
             if current_room and talk.room == current_room then
                 room_next_talks[#room_next_talks+1] = talk
