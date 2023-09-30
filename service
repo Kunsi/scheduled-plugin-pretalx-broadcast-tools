@@ -28,10 +28,8 @@ def idle(seconds, event_start, event_tz):
             event_now = datetime.now(event_tz)
             utc_now = datetime.now(pytz.utc)
 
-            utc_offset = (event_now - utc_now).total_seconds()
-
-            day_zero = event_start.replace(
-                hour=0, minute=0, second=0, tzinfo=event_tz
+            day_zero = event_tz.localize(
+                event_start.replace(hour=0, minute=0, second=0)
             ) - timedelta(days=1)
 
             day_info = event_now - day_zero
