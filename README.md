@@ -7,10 +7,6 @@ pretalx installation!
 
 [Import this package to info-beamer.com](https://info-beamer.com/use?url=https%3A%2F%2Fgithub.com%2FKunsi%2Fscheduled-plugin-pretalx-broadcast-tools.git)
 
-It's important that you import this plugin under one of the paths
-`pretalx` or `pretalx-broadcast-tools` into your setup. Otherwise
-no information will be shown!
-
 ## Features
 
 * show the next talk in the configured room
