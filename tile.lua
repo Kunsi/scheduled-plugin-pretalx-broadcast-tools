@@ -121,6 +121,7 @@ end
 local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
     local show_abstract = config.next_abstract
+    local track_text = config.next_track_text
     local default_color = {helper.parse_rgb(config.color or "#ffffff")}
 
     local a = anims.Area(x2 - x1, y2 - y1)
@@ -138,11 +139,12 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
     local title_size = font_size
     local abstract_size = math.floor(font_size * 0.8)
     local speaker_size = math.floor(font_size * 0.8)
+    local track_size = math.floor(font_size * 0.6)
 
     local current_talk = room_next_talks[1]
 
     local col1 = 0
-    local col2 = 0 + font:width("in XXX min", time_size)
+    local col2 = 35 + font:width("in XXX min", time_size)
 
     if #schedule == 0 then
         text(col2, y, "Fetching talks...", time_size, rgba(default_color,1))
@@ -174,12 +176,6 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             text(col2, y, lines[idx], title_size, rgba(default_color,1))
             y = y + title_size
         end
-
-        if current_talk.track then
-            local r,g,b = helper.parse_rgb(current_talk.track.color)
-            text(col2, y, current_talk.track.name, title_size, r,g,b,1)
-            y = y + title_size
-        end
         y = y + 20
 
         -- Show abstract only if it fits into the drawing area completely
@@ -197,6 +193,21 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             for idx = 1, #current_talk.persons do
                 text(col2, y, current_talk.persons[idx], speaker_size, rgba(default_color,.8))
                 y = y + speaker_size
+            end
+        end
+
+        if current_talk.track then
+            local r,g,b = helper.parse_rgb(current_talk.track.color)
+            if track_text then
+                if a.height > y + 20 + track_size then
+                    text(col2, y+20, current_talk.track.name, track_size, r,g,b,1)
+                end
+            else
+                a.add(anims.moving_image_raw(
+                    S, E, resource.create_colored_texture(r,g,b,1),
+                    col2 - 25, 0,
+                    col2 - 10, y
+                ))
             end
         end
     end
@@ -221,7 +232,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
     -- always leave room for 15px of track bar
     local col1 = 0
-    local col2 = 25 + font:width("XXX min ago", time_size)
+    local col2 = 35 + font:width("XXX min ago", time_size)
 
     local x, y = 0, 0
 

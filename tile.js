@@ -14,7 +14,7 @@ var config = {
           </select>
         </div>
         <div class='col-xs-3'>
-          Text Color<br/>
+          Text Colour<br/>
           <input
             type="color"
             v-model="color"
@@ -49,6 +49,13 @@ var config = {
               v-model="next_abstract"
               class='form-check-input'/>
             Show abstract
+          </div>
+          <div class='col-xs-3'>
+            <input
+              type="checkbox"
+              v-model="next_track_text"
+              class='form-check-input'/>
+            Show track name instead of coloured bar
           </div>
         </div>
       </template>
@@ -94,6 +101,7 @@ var config = {
     font_size: ChildTile.config_value('font_size', 70, parseInt),
     all_speakers: ChildTile.config_value('all_speakers', true),
     next_abstract: ChildTile.config_value('next_abstract', false),
+    next_track_text: ChildTile.config_value('next_track_text', false),
     room_align: ChildTile.config_value('room_align', 'left'),
     day_align: ChildTile.config_value('day_align', 'left'),
     day_template: ChildTile.config_value('day_template', 'Day %d'),
