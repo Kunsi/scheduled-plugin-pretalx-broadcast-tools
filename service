@@ -20,10 +20,7 @@ def idle(seconds, event_start, event_tz):
     end = time.time() + seconds
     log("sleeping for {} seconds".format(seconds))
     while time.time() < end:
-        send_data = {
-            'day': '??',
-            'time': time.time()
-        }
+        send_data = {"day": "??", "time": time.time()}
         if event_start is not None:
             event_now = datetime.now(event_tz)
             utc_now = datetime.now(pytz.utc)
@@ -31,10 +28,7 @@ def idle(seconds, event_start, event_tz):
             utc_offset = (event_now - utc_now).total_seconds()
 
             day_zero = event_start.replace(
-                hour=0,
-                minute=0,
-                second=0,
-                tzinfo=timezone
+                hour=0, minute=0, second=0, tzinfo=event_tz
             ) - timedelta(days=1)
 
             day_info = event_now - day_zero
@@ -42,11 +36,11 @@ def idle(seconds, event_start, event_tz):
             log("Day0: {}".format(day_zero.isoformat()))
             log("NOW:  {}".format(event_now.isoformat()))
 
-            send_data['day'] = day_info.days
+            send_data["day"] = day_info.days
 
-        for k,v in send_data.items():
-            node.send_raw('root/plugin/pretalx/{}:{}'.format(k, v))
-            node.send_raw('root/plugin/pretalx-broadcast-tools/{}:{}'.format(k, v))
+        for k, v in send_data.items():
+            node.send_raw("root/plugin/pretalx/{}:{}".format(k, v))
+            node.send_raw("root/plugin/pretalx-broadcast-tools/{}:{}".format(k, v))
         time.sleep(1)
 
 
@@ -85,7 +79,7 @@ def main():
 
         if event_info is not None:
             event_start = datetime.strptime(event_info["start"], "%Y-%m-%d")
-            event_tz = pytz.timezone(event_info['timezone'])
+            event_tz = pytz.timezone(event_info["timezone"])
 
         try:
             r = get(
@@ -99,8 +93,13 @@ def main():
             # we need.
         else:
             schedule = r.json()
-            for talk in schedule['talks']:
-                talk['start_str'] = datetime.fromtimestamp(talk['start_ts']).replace(tzinfo=pytz.utc).astimezone(event_tz).strftime('%H:%M')
+            for talk in schedule["talks"]:
+                talk["start_str"] = (
+                    datetime.fromtimestamp(talk["start_ts"])
+                    .replace(tzinfo=pytz.utc)
+                    .astimezone(event_tz)
+                    .strftime("%H:%M")
+                )
             node.write_json("schedule.json", schedule)
             log("updated schedule json")
 
