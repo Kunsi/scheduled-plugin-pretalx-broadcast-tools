@@ -70,6 +70,13 @@ var config = {
               <option value="right">Align right</option>
             </select>
           </div>
+          <div class='col-xs-3'>
+            <input
+              type="checkbox"
+              v-model="room_animate"
+              class='form-check-input'/>
+            Fade in and out
+          </div>
         </div>
       </template>
       <template v-if='mode == "day"'>
@@ -91,6 +98,13 @@ var config = {
               placeholder="Template: 'Day %s'"
               class='form-control'/>
           </div>
+          <div class='col-xs-3'>
+            <input
+              type="checkbox"
+              v-model="day_animate"
+              class='form-check-input'/>
+            Fade in and out
+          </div>
         </div>
       </template>
     </div>
@@ -99,12 +113,18 @@ var config = {
     mode: ChildTile.config_value('mode', 'all_talks'),
     color: ChildTile.config_value('color', '#ffffff'),
     font_size: ChildTile.config_value('font_size', 70, parseInt),
+
     all_speakers: ChildTile.config_value('all_speakers', true),
+
     next_abstract: ChildTile.config_value('next_abstract', false),
     next_track_text: ChildTile.config_value('next_track_text', false),
+
     room_align: ChildTile.config_value('room_align', 'left'),
+    room_animate: ChildTile.config_value('room_animate', true),
+
     day_align: ChildTile.config_value('day_align', 'left'),
     day_template: ChildTile.config_value('day_template', 'Day %d'),
+    day_animate: ChildTile.config_value('day_animate', false),
   }
 }
 

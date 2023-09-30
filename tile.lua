@@ -337,7 +337,9 @@ end
 local function view_room(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
     local align = config.room_align or "left"
+    local animate = config.room_animate
     local default_color = {helper.parse_rgb(config.color or "#ffffff")}
+    local r,g,b = helper.parse_rgb(config.color or "#ffffff")
 
     local a = anims.Area(x2 - x1, y2 - y1)
 
@@ -358,7 +360,11 @@ local function view_room(starts, ends, config, x1, y1, x2, y2)
     text(x, 0, current_room, font_size, rgba(default_color,1))
 
     for now in api.frame_between(starts, ends) do
-        a.draw(now, x1, y1, x2, y2)
+        if animate then
+            a.draw(now, x1, y1, x2, y2)
+        else
+            font:write(x1+x, y1, line, font_size, r,g,b,1)
+        end
     end
 end
 
@@ -366,7 +372,9 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
     local align = config.day_align or "left"
     local template = config.day_template or "Day %d"
+    local animate = config.day_animate
     local default_color = {helper.parse_rgb(config.color or "#ffffff")}
+    local r,g,b = helper.parse_rgb(config.color or "#ffffff")
 
     local a = anims.Area(x2 - x1, y2 - y1)
 
@@ -388,7 +396,11 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
     text(x, 0, line, font_size, rgba(default_color,1))
 
     for now in api.frame_between(starts, ends) do
-        a.draw(now, x1, y1, x2, y2)
+        if animate then
+            a.draw(now, x1, y1, x2, y2)
+        else
+            font:write(x1+x, y1, line, font_size, r,g,b,1)
+        end
     end
 end
 
