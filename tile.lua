@@ -31,6 +31,11 @@ end
 
 function M.data_trigger(path, data)
     log("received data '" .. data .. "' on " .. path)
+    if path == "day" then
+        day = tonumber(data)
+    elseif path == "time" then
+        time = tonumber(data)
+    end
 end
 
 function M.updated_config_json(config)
@@ -83,8 +88,11 @@ local function wrap(str, font, size, max_w)
 end
 
 local function check_next_talks()
-    time = api.clock.unix()
     log("time is now " .. time)
+    if time == 0 then
+        log("No time info yet, cannot check for next talks")
+        return
+    end
 
     room_next_talks = {}
     all_next_talks = {}

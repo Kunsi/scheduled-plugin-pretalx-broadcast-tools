@@ -20,7 +20,7 @@ def idle(seconds, event_start, event_tz):
     end = time.time() + seconds
     log("sleeping for {} seconds".format(seconds))
     while time.time() < end:
-        send_data = {"day": "??", "time": time.time()}
+        send_data = {"day": "??", "time": int(time.time())}
         if event_start is not None:
             event_now = datetime.now(event_tz)
             utc_now = datetime.now(pytz.utc)
