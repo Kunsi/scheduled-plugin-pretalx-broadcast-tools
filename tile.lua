@@ -363,7 +363,7 @@ local function view_room(starts, ends, config, x1, y1, x2, y2)
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
-            font:write(x1+x, y1, line, font_size, r,g,b,1)
+            font:write(x1+x, y1, current_room, font_size, r,g,b,1)
         end
     end
 end
