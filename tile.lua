@@ -273,7 +273,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         else
             talk_time = string.format("%d min ago", math.ceil(-delta/60))
         end
-        local time_width = font:width(talk_time, time_size) 
+        local time_width = font:width(talk_time, time_size)
         text(col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
 
         if show_track and talk.track then
@@ -308,37 +308,58 @@ end
 local function view_room(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
     local align = config.room_align or "left"
-    local r,g,b = helper.parse_rgb(config.color or "#ffffff")
+    local default_color = {helper.parse_rgb(config.color or "#ffffff")}
+
+    local a = anims.Area(x2 - x1, y2 - y1)
+
+    local S = starts
+    local E = ends
+
+    local function text(...)
+        return a.add(anims.moving_font(S, E, font, ...))
+    end
+
+    local x = 0
+    local w = font:width(current_room, font_size)
+    if align == "right" then
+        x = a.width - w
+    elseif align == "center" then
+        x = (a.width - w) / 2
+    end
+    text(x, 0, current_room, font_size, rgba(default_color,1))
 
     for now in api.frame_between(starts, ends) do
-        local x = x1
-        local w = font:width(current_room, font_size)
-        if align == "right" then
-            x = x2 - w
-        elseif align == "center" then
-            x = (x1 + x2 - w) / 2
-        end
-        font:write(x, y1, current_room, font_size, r,g,b)
+        a.draw(now, x1, y1, x2, y2)
     end
 end
 
 local function view_day(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
-    local r,g,b = helper.parse_rgb(config.color or "#ffffff")
     local align = config.day_align or "left"
     local template = config.day_template or "Day %d"
+    local default_color = {helper.parse_rgb(config.color or "#ffffff")}
+
+    local a = anims.Area(x2 - x1, y2 - y1)
+
+    local S = starts
+    local E = ends
+
+    local function text(...)
+        return a.add(anims.moving_font(S, E, font, ...))
+    end
+
+    local x = 0
+    local line = string.format(template, day)
+    local w = font:width(line, font_size)
+    if align == "right" then
+        x = a.width - w
+    elseif align == "center" then
+        x = (a.width - w) / 2
+    end
+    text(x, 0, line, font_size, rgba(default_color,1))
 
     for now in api.frame_between(starts, ends) do
-        local x = x1
-        local line = string.format(template, day)
-        local w = font:width(line, font_size)
-
-        if align == "right" then
-            x = x2 - w
-        elseif align == "center" then
-            x = (x1 + x2 - w) / 2
-        end
-        font:write(x, y1, line, font_size, r,g,b)
+        a.draw(now, x1, y1, x2, y2)
     end
 end
 
