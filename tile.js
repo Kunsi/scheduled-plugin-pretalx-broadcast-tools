@@ -13,24 +13,18 @@ var config = {
           </select>
         </div>
         <div class='col-xs-3'>
+          Text Color<br/>
           <input
             type="color"
             v-model="color"
             class='form-control'/>
         </div>
         <div class='col-xs-3'>
-          <select class='btn btn-default' v-model="font_size">
-            <option value="40">40px</option>
-            <option value="50">50px</option>
-            <option value="60">60px</option>
-            <option value="70">70px</option>
-            <option value="80">80px</option>
-            <option value="90">90px</option>
-            <option value="100">100px</option>
-            <option value="110">110px</option>
-            <option value="150">150px</option>
-            <option value="200">200px</option>
-          </select>
+          Font Size<br/>
+          <input
+            type="number"
+            class='form-control'
+            v-model="font_size" />
         </div>
       </div>
       <template v-if='mode == "all_talks"'>
@@ -80,6 +74,7 @@ var config = {
             </select>
           </div>
           <div class='col-xs-3'>
+            Format<br/>
             <input
               type="text"
               v-model="day_template"
