@@ -179,7 +179,12 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
         -- Title
         local y_start = y
 
-        local lines = wrap(current_talk.title, font, title_size, a.width - col2)
+        local title = current_talk.title
+        if show_language and current_talk.locale then
+            title = title .. " (" .. current_talk.locale .. ")"
+        end
+
+        local lines = wrap(title, font, title_size, a.width - col2)
         for idx = 1, math.min(5, #lines) do
             text(col2, y, lines[idx], title_size, rgba(default_color,1))
             y = y + title_size
@@ -257,8 +262,13 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
     for idx = 1, #all_next_talks do
         local talk = all_next_talks[idx]
 
+        local title = talk.title
+        if show_language and talk.locale then
+            title = title .. " (" .. talk.locale .. ")"
+        end
+
         local title_lines = wrap(
-            talk.title,
+            title,
             font, title_size, a.width - col2
         )
 
