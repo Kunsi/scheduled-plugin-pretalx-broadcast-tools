@@ -204,7 +204,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             end
         end
 
-        if current_talk.track then
+        if show_track and current_talk.track then
             local r,g,b = helper.parse_rgb(current_talk.track.color)
             if track_text then
                 if a.height > y + 20 + track_size then
