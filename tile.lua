@@ -192,8 +192,8 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
         y = y + 20
 
         -- Show abstract only if it fits into the drawing area completely
+        local lines = wrap(current_talk.abstract, font, abstract_size, a.width - col2)
         if show_abstract and a.height > (y + #lines*abstract_size + 20) then
-            local lines = wrap(current_talk.abstract, font, abstract_size, a.width - col2)
             for idx = 1, #lines do
                 text(col2, y, lines[idx], abstract_size, rgba(default_color,1))
                 y = y + abstract_size
