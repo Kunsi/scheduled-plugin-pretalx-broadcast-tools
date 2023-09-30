@@ -274,7 +274,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         local info_line = talk.room
 
-        if show_speakers and #talk.persons then
+        if show_speakers and #talk.persons > 0 then
             local joiner = ({
                 de = "mit",
             })[talk.locale] or "with"
