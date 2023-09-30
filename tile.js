@@ -5,6 +5,7 @@ var config = {
       <h4>Frab Plugin</h4>
       <div class='row'>
         <div class='col-xs-3'>
+          Display Mode<br/>
           <select class='btn btn-default' v-model="mode">
             <option value="all_talks">All Talks</option>
             <option value="next_talk">Next Talk</option>
@@ -55,6 +56,7 @@ var config = {
         <h4>room options</h4>
         <div class='row'>
           <div class='col-xs-3'>
+            Alignment<br/>
             <select class='btn btn-default' v-model="room_align">
               <option value="left">Align left</option>
               <option value="center">Align centered</option>
@@ -67,6 +69,7 @@ var config = {
         <h4>Day options</h4>
         <div class='row'>
           <div class='col-xs-3'>
+            Alignment<br/>
             <select class='btn btn-default' v-model="day_align">
               <option value="left">Align left</option>
               <option value="center">Align centered</option>
