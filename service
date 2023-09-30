@@ -100,7 +100,7 @@ def main():
         else:
             schedule = r.json()
             for talk in schedule['talks']:
-                talk['start_str'] = datetime.fromtimestamp(talk['start_ts']).astimezone(event_tz).strftime('%H:%M')
+                talk['start_str'] = datetime.fromtimestamp(talk['start_ts']).replace(tzinfo=pytz.utc).astimezone(event_tz).strftime('%H:%M')
             node.write_json("schedule.json", schedule)
             log("updated schedule json")
 
