@@ -19,14 +19,13 @@ def log(msg):
 def idle(seconds, event_start, event_tz):
     end = time.time() + seconds
     log("sleeping for {} seconds".format(seconds))
-    timezone = pytz.timezone(event_tz)
     while time.time() < end:
         send_data = {
             'day': '??',
             'time': time.time()
         }
         if event_start is not None:
-            event_now = datetime.now(timezone)
+            event_now = datetime.now(event_tz)
             utc_now = datetime.now(pytz.utc)
 
             utc_offset = (event_now - utc_now).total_seconds()
@@ -55,7 +54,7 @@ def main():
     event_info = None
     event_start = None
     schedule = None
-    event_tz = 'UTC'
+    event_tz = pytz.utc
 
     while True:
         event_url = config["event_url"]
@@ -84,6 +83,10 @@ def main():
             node.write_json("event.json", event_info)
             log("updated event info json")
 
+        if event_info is not None:
+            event_start = datetime.strptime(event_info["start"], "%Y-%m-%d")
+            event_tz = pytz.timezone(event_info['timezone'])
+
         try:
             r = get(
                 event_url + "p/broadcast-tools/schedule.json",
@@ -97,13 +100,9 @@ def main():
         else:
             schedule = r.json()
             for talk in schedule['talks']:
-                talk['start_str'] = datetime.fromtimestamp(talk['start_ts']).strftime('%H:%M')
+                talk['start_str'] = datetime.fromtimestamp(talk['start_ts']).astimezone(event_tz).strftime('%H:%M')
             node.write_json("schedule.json", schedule)
             log("updated schedule json")
-
-        if event_info is not None:
-            event_start = datetime.strptime(event_info["start"], "%Y-%m-%d")
-            event_tz = event_info['timezone']
 
         idle(30, event_start, event_tz)
 
