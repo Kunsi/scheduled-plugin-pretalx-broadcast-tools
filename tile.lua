@@ -233,7 +233,7 @@ end
 local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
     local title_size = config.font_size or 70
     local default_color = {helper.parse_rgb(config.color or "#ffffff")}
-    local show_speakers = config.all_speakers
+    local show_speakers = config.all_speakers or true
 
     local a = anims.Area(x2 - x1, y2 - y1)
 
@@ -337,7 +337,7 @@ end
 local function view_room(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
     local align = config.room_align or "left"
-    local animate = config.room_animate
+    local animate = config.room_animate or true
     local default_color = {helper.parse_rgb(config.color or "#ffffff")}
     local r,g,b = helper.parse_rgb(config.color or "#ffffff")
 
