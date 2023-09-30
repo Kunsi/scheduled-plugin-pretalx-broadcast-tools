@@ -19,12 +19,13 @@ def log(msg):
 def idle(seconds, event_start, event_tz):
     end = time.time() + seconds
     log("sleeping for {} seconds".format(seconds))
+    timezone = pytz.timezone(event_tz)
     while time.time() < end:
         send_data = {
             'day': '??',
+            'time': time.time()
         }
         if event_start is not None:
-            timezone = pytz.timezone(event_tz)
             event_now = datetime.now(timezone)
             utc_now = datetime.now(pytz.utc)
 
@@ -43,9 +44,6 @@ def idle(seconds, event_start, event_tz):
             log("NOW:  {}".format(event_now.isoformat()))
 
             send_data['day'] = day_info.days
-            send_data['time'] = int(time.time() + utc_offset)
-        else:
-            send_data['time'] = time.time()
 
         for k,v in send_data.items():
             node.send_raw('root/plugin/pretalx/{}:{}'.format(k, v))

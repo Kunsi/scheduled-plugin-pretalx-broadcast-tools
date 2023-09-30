@@ -15,7 +15,7 @@ local all_next_talks = {}
 local room_next_talks = {}
 local current_room
 local day = 0
-local time = 1695989869
+local time = 0
 local show_language = true
 local show_track = true
 
@@ -83,10 +83,8 @@ local function wrap(str, font, size, max_w)
 end
 
 local function check_next_talks()
+    time = api.clock.unix()
     log("time is now " .. time)
-    if time == 0 then
-        return
-    end
 
     room_next_talks = {}
     all_next_talks = {}
