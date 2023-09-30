@@ -266,7 +266,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         local delta = talk.start_ts - time
         if delta > -60 and delta < 60 then
             talk_time = "Now"
-        elseif delta > 180*60 then
+        elseif delta > 30*60 then
             talk_time = talk.start_str
         elseif delta > 0 then
             talk_time = string.format("in %d min", math.floor(delta/60)+1)
