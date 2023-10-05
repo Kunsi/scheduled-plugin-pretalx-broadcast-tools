@@ -99,7 +99,9 @@ local function check_next_talks()
 
     local min_start = time - 25 * 60
 
-    log("my room is '" .. current_room .. "'")
+    if current_room then
+        log("my room is '" .. current_room .. "'")
+    end
 
     for idx = 1, #schedule do
         local talk = schedule[idx]
