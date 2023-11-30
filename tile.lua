@@ -269,6 +269,8 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
             title = title .. " (" .. talk.locale .. ")"
         end
 
+        log(title .. " AA")
+
         local title_lines = wrap(
             title,
             font, title_size, a.width - col2
@@ -291,6 +293,8 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         if y + #title_lines * title_size + 3 + #info_lines * info_size > a.height then
             break
         end
+
+        log(title .. " BB")
 
         -- time
         local talk_time
