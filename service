@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import traceback
+from calendar import timegm
 from datetime import datetime, timedelta
 
 import pytz
@@ -108,7 +109,7 @@ def main():
             except Exception as e:
                 log("getting schedule.json failed: {}".format(repr(e)))
             else:
-                raw_schedule = r.json()
+                raw_schedule = r.json()["schedule"]
                 schedule = {"talks": []}
 
                 event_start = datetime.strptime(
@@ -116,18 +117,18 @@ def main():
                 )
                 event_tz = pytz.timezone(raw_schedule["conference"]["time_zone_name"])
 
-                for day in raw_schedule["days"]:
+                for day in raw_schedule["conference"]["days"]:
                     for room in day["rooms"].values():
                         for talk in room:
                             start = datetime.strptime(
-                                talk["date"][:19], "%Y-%m-%dT%H:%M%:S"
+                                talk["date"][:19], "%Y-%m-%dT%H:%M:%S"
                             ).replace(tzinfo=event_tz)
                             d_h, d_m = talk["duration"].split(":")
                             end = start + timedelta(hours=int(d_h), minutes=int(d_m))
 
-                            talk["start_ts"] = start.timestamp()
+                            talk["start_ts"] = timegm(start.timetuple())
                             talk["start_str"] = talk["start"]
-                            talk["end_ts"] = end.timestamp()
+                            talk["end_ts"] = timegm(end.timetuple())
                             talk["locale"] = talk["language"]
 
                             track = None
