@@ -187,9 +187,9 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             title = title .. " (" .. current_talk.locale .. ")"
         end
 
-        local lines = wrap(title, font_title, title_size, a.width - col2)
+        local lines = wrap(title, font_talk, title_size, a.width - col2)
         for idx = 1, math.min(5, #lines) do
-            text(font_title, col2, y, lines[idx], title_size, rgba(default_color,1))
+            text(font_talk, col2, y, lines[idx], title_size, rgba(default_color,1))
             y = y + title_size
         end
         y = y + 20
@@ -277,7 +277,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         local title_lines = wrap(
             title,
-            font_title, title_size, a.width - col2
+            font_talk, title_size, a.width - col2
         )
 
         local info_line = talk.room
@@ -326,7 +326,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         -- title
         for idx = 1, #title_lines do
-            text(font_title, col2, y, title_lines[idx], title_size, rgba(default_color,1))
+            text(font_talk, col2, y, title_lines[idx], title_size, rgba(default_color,1))
             y = y + title_size
         end
         y = y + 3
