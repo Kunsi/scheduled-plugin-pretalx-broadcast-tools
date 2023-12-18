@@ -212,16 +212,16 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             end
         end
 
-        if show_track and current_talk.track then
-            local r,g,b,a = rgba(default_color, 1)
-            if current_talk.track.color then
-                r,g,b = helper.parse_rgb(current_talk.track.color)
+        if show_track and current_talk.track ~= json.null then
+            local r,g,b,_ = rgba(default_color, 1)
+            if current_talk.track.color ~= json.null then
+                r,g,b = helper.parse_rgb(current_talk.track["color"])
             end
             if track_text then
                 if a.height > y + 20 + track_size then
                     text(font_text, col2, y+20, current_talk.track.name, track_size, r,g,b,1)
                 end
-            elseif current_talk.track.color then
+            elseif current_talk.track.color ~= json.null then
                 a.add(anims.moving_image_raw(
                     S, E, resource.create_colored_texture(r,g,b,1),
                     col2 - 25, 0,
@@ -273,8 +273,6 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
             title = title .. " (" .. talk.locale .. ")"
         end
 
-        log(title .. " AA")
-
         local title_lines = wrap(
             title,
             font_talk, title_size, a.width - col2
@@ -298,8 +296,6 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
             break
         end
 
-        log(title .. " BB")
-
         -- time
         local talk_time
         local delta = talk.start_ts - time
@@ -315,15 +311,14 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         local time_width = font_running:width(talk_time, time_size)
         text(font_text, col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
 
-        if show_track and talk.track then
-            if talk.track.color then
-                local r,g,b = helper.parse_rgb(talk.track.color)
-                a.add(anims.moving_image_raw(
-                    S, E, resource.create_colored_texture(r,g,b,1),
-                    col2 - 25, y,
-                    col2 - 10, y + #title_lines*title_size + 3 + #info_lines*info_size
-                ))
-            end
+        -- track
+        if show_track and talk.track ~= json.null and talk.track.color ~= json.null then
+            local r,g,b = helper.parse_rgb(talk.track.color)
+            a.add(anims.moving_image_raw(
+                S, E, resource.create_colored_texture(r,g,b,1),
+                col2 - 25, y,
+                col2 - 10, y + #title_lines*title_size + 3 + #info_lines*info_size
+            ))
         end
 
         -- title
