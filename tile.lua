@@ -308,7 +308,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         else
             talk_time = string.format("%d min ago", math.ceil(-delta/60))
         end
-        local time_width = font_running:width(talk_time, time_size)
+        local time_width = font_text:width(talk_time, time_size)
         text(font_text, col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
 
         -- track
