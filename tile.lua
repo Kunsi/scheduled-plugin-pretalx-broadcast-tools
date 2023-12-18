@@ -9,7 +9,6 @@ local white = resource.create_colored_texture(1,1,1)
 local fallback_track_background = resource.create_colored_texture(.5,.5,.5,1)
 
 local schedule = {}
-local event = {}
 local rooms = {}
 local all_next_talks = {}
 local room_next_talks = {}
@@ -57,11 +56,6 @@ end
 function M.updated_schedule_json(new_schedule)
     log("new schedule")
     schedule = new_schedule.talks
-end
-
-function M.updated_event_json(new_info)
-    log("new event info")
-    event = new_info
 end
 
 local function wrap(str, font, size, max_w)
