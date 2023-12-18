@@ -206,12 +206,15 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
         end
 
         if show_track and current_talk.track then
-            local r,g,b = helper.parse_rgb(current_talk.track.color)
+            local r,g,b,a = rgba(default_color, 1)
+            if current_talk.track.color then
+                r,g,b = helper.parse_rgb(current_talk.track.color)
+            end
             if track_text then
                 if a.height > y + 20 + track_size then
                     text(col2, y+20, current_talk.track.name, track_size, r,g,b,1)
                 end
-            else
+            elseif current_talk.track.color then
                 a.add(anims.moving_image_raw(
                     S, E, resource.create_colored_texture(r,g,b,1),
                     col2 - 25, 0,
@@ -305,7 +308,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         local time_width = font:width(talk_time, time_size)
         text(col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
 
-        if show_track and talk.track then
+        if show_track and talk.track and talk.track.color then
             local r,g,b = helper.parse_rgb(talk.track.color)
             a.add(anims.moving_image_raw(
                 S, E, resource.create_colored_texture(r,g,b,1),
