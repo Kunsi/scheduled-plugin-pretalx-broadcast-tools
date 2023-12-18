@@ -4,8 +4,10 @@ local json = require "json"
 local helper = require "helper"
 local anims = require(api.localized "anims")
 
-local font_running
-local font_headline
+local font_day
+local font_room
+local font_talk
+local font_text
 local white = resource.create_colored_texture(1,1,1)
 local fallback_track_background = resource.create_colored_texture(.5,.5,.5,1)
 
@@ -40,10 +42,13 @@ end
 
 function M.updated_config_json(config)
     log("running on device ".. tostring(sys.get_env "SERIAL"))
-    font_running = resource.load_font(api.localized(config.font.asset_name))
-    font_headline = resource.load_font(api.localized(config.font_headline.asset_name))
     show_language = config.show_language
     show_track = config.show_track
+
+    font_day = resource.load_font(api.localized(config.font_day.asset_name))
+    font_room = resource.load_font(api.localized(config.font_room.asset_name))
+    font_talk = resource.load_font(api.localized(config.font_talk.asset_name))
+    font_text = resource.load_font(api.localized(config.font_text.asset_name))
 
     current_room = nil
     for idx, room in ipairs(config.rooms) do
@@ -136,7 +141,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
     local E = ends
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font_running, ...))
+        return a.add(anims.moving_font(S, E, ...))
     end
 
     local x, y = 0, 0
@@ -150,15 +155,15 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
     local current_talk = room_next_talks[1]
 
     local col1 = 0
-    local col2 = 35 + font_running:width("in XXX min", time_size)
+    local col2 = 35 + font_text:width("in XXX min", time_size)
 
     if #schedule == 0 then
-        text(col2, y, "Fetching talks...", time_size, rgba(default_color,1))
+        text(font_text, col2, y, "Fetching talks...", time_size, rgba(default_color,1))
     elseif not current_talk then
-        text(col2, y, "Nope. That's it.", time_size, rgba(default_color,1))
+        text(font_text, col2, y, "Nope. That's it.", time_size, rgba(default_color,1))
     else
         -- Time
-        text(col1, y, current_talk.start_str, time_size, rgba(default_color,1))
+        text(font_text, col1, y, current_talk.start_str, time_size, rgba(default_color,1))
 
         -- Delta
         local delta = current_talk.start_ts - time
@@ -172,7 +177,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
         end
 
         local y_time = y+time_size
-        text(col1, y_time, talk_time, time_size, rgba(default_color,1))
+        text(font_text, col1, y_time, talk_time, time_size, rgba(default_color,1))
 
         -- Title
         local y_start = y
@@ -182,18 +187,18 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             title = title .. " (" .. current_talk.locale .. ")"
         end
 
-        local lines = wrap(title, font_running, title_size, a.width - col2)
+        local lines = wrap(title, font_title, title_size, a.width - col2)
         for idx = 1, math.min(5, #lines) do
-            text(col2, y, lines[idx], title_size, rgba(default_color,1))
+            text(font_title, col2, y, lines[idx], title_size, rgba(default_color,1))
             y = y + title_size
         end
         y = y + 20
 
         -- Show abstract only if it fits into the drawing area completely
-        local lines = wrap(current_talk.abstract, font_running, abstract_size, a.width - col2)
+        local lines = wrap(current_talk.abstract, font_text, abstract_size, a.width - col2)
         if show_abstract and a.height > (y + #lines*abstract_size + 20) then
             for idx = 1, #lines do
-                text(col2, y, lines[idx], abstract_size, rgba(default_color,1))
+                text(font_text, col2, y, lines[idx], abstract_size, rgba(default_color,1))
                 y = y + abstract_size
             end
             y = y + 20
@@ -202,7 +207,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
         -- Show speakers only if all of them do fit into the drawing area
         if a.height > (y + #current_talk.persons*speaker_size + 20) then
             for idx = 1, #current_talk.persons do
-                text(col2, y, current_talk.persons[idx], speaker_size, rgba(default_color,.8))
+                text(font_text, col2, y, current_talk.persons[idx], speaker_size, rgba(default_color,.8))
                 y = y + speaker_size
             end
         end
@@ -214,7 +219,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             end
             if track_text then
                 if a.height > y + 20 + track_size then
-                    text(col2, y+20, current_talk.track.name, track_size, r,g,b,1)
+                    text(font_text, col2, y+20, current_talk.track.name, track_size, r,g,b,1)
                 end
             elseif current_talk.track.color then
                 a.add(anims.moving_image_raw(
@@ -246,18 +251,18 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
     -- always leave room for 15px of track bar
     local col1 = 0
-    local col2 = 35 + font_running:width("XXX min ago", time_size)
+    local col2 = 35 + font_text:width("XXX min ago", time_size)
 
     local x, y = 0, 0
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font_running, ...))
+        return a.add(anims.moving_font(S, E, ...))
     end
 
     if #schedule == 0 then
-        text(col2, y, "Fetching talks...", title_size, rgba(default_color,1))
+        text(font_text, col2, y, "Fetching talks...", title_size, rgba(default_color,1))
     elseif #all_next_talks == 0 and #schedule > 0 and sys.now() > 30 then
-        text(col2, y, "Nope. That's it.", title_size, rgba(default_color,1))
+        text(font_text, col2, y, "Nope. That's it.", title_size, rgba(default_color,1))
     end
 
     for idx = 1, #all_next_talks do
@@ -272,7 +277,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         local title_lines = wrap(
             title,
-            font_running, title_size, a.width - col2
+            font_title, title_size, a.width - col2
         )
 
         local info_line = talk.room
@@ -286,7 +291,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         local info_lines = wrap(
             info_line,
-            font_running, info_size, a.width - col2
+            font_text, info_size, a.width - col2
         )
 
         if y + #title_lines * title_size + 3 + #info_lines * info_size > a.height then
@@ -308,7 +313,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
             talk_time = string.format("%d min ago", math.ceil(-delta/60))
         end
         local time_width = font_running:width(talk_time, time_size)
-        text(col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
+        text(font_text, col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
 
         if show_track and talk.track and talk.track.color then
             local r,g,b = helper.parse_rgb(talk.track.color)
@@ -321,14 +326,14 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         -- title
         for idx = 1, #title_lines do
-            text(col2, y, title_lines[idx], title_size, rgba(default_color,1))
+            text(font_title, col2, y, title_lines[idx], title_size, rgba(default_color,1))
             y = y + title_size
         end
         y = y + 3
 
         -- info
         for idx = 1, #info_lines do
-            text(col2, y, info_lines[idx], info_size, rgba(default_color,.8))
+            text(font_text, col2, y, info_lines[idx], info_size, rgba(default_color,.8))
             y = y + info_size
         end
         y = y + 20
@@ -352,23 +357,23 @@ local function view_room(starts, ends, config, x1, y1, x2, y2)
     local E = ends
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font_headline, ...))
+        return a.add(anims.moving_font(S, E, ...))
     end
 
     local x = 0
-    local w = font_headline:width(current_room, font_size)
+    local w = font_room:width(current_room, font_size)
     if align == "right" then
         x = a.width - w
     elseif align == "center" then
         x = (a.width - w) / 2
     end
-    text(x, 0, current_room, font_size, rgba(default_color,1))
+    text(font_room, x, 0, current_room, font_size, rgba(default_color,1))
 
     for now in api.frame_between(starts, ends) do
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
-            font_headline:write(x1+x, y1, current_room, font_size, r,g,b,1)
+            font_room:write(x1+x, y1, current_room, font_size, r,g,b,1)
         end
     end
 end
@@ -387,24 +392,24 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
     local E = ends
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font_running, ...))
+        return a.add(anims.moving_font(S, E, ...))
     end
 
     local x = 0
     local line = string.format(template, day)
-    local w = font_running:width(line, font_size)
+    local w = font_day:width(line, font_size)
     if align == "right" then
         x = a.width - w
     elseif align == "center" then
         x = (a.width - w) / 2
     end
-    text(x, 0, line, font_size, rgba(default_color,1))
+    text(font_day, x, 0, line, font_size, rgba(default_color,1))
 
     for now in api.frame_between(starts, ends) do
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
-            font_running:write(x1+x, y1, line, font_size, r,g,b,1)
+            font_day:write(x1+x, y1, line, font_size, r,g,b,1)
         end
     end
 end

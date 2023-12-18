@@ -4,20 +4,35 @@
         "network": "Has to fetch schedule from remote site"
     },
     "options": [{
-        "title": "Design",
+        "title": "Fonts",
         "type": "section"
     }, {
-        "title": "Font (headline",
+        "title": "Room name",
         "ui_width": 6,
-        "name": "font_headline",
+        "name": "font_room",
         "type": "font",
         "default": "silkscreen.ttf"
     }, {
-        "title": "Font (running text)",
+        "title": "Talk title",
         "ui_width": 6,
-        "name": "font",
+        "name": "font_talk",
         "type": "font",
         "default": "silkscreen.ttf"
+    }, {
+        "title": "Day",
+        "ui_width": 6,
+        "name": "font_day",
+        "type": "font",
+        "default": "silkscreen.ttf"
+    }, {
+        "title": "all other text",
+        "ui_width": 6,
+        "name": "font_text",
+        "type": "font",
+        "default": "silkscreen.ttf"
+    }, {
+        "title": "Design",
+        "type": "section"
     }, {
         "title": "Show Language",
         "ui_width": 4,
