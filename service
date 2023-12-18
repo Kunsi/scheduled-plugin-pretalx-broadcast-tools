@@ -58,8 +58,9 @@ def main():
             # changes.
             time.sleep(99999999)
         log("event url: {}".format(schedule_url))
+        log("using json flavour: {}".format(config["json_flavour"]))
 
-        if config['json_flavour'] == 'pretalx-broadcast-tools':
+        if config["json_flavour"] == "pretalx-broadcast-tools":
             if not schedule_url.endswith("/"):
                 schedule_url = schedule_url + "/"
             try:
@@ -100,7 +101,7 @@ def main():
                     )
                 node.write_json("schedule.json", schedule)
                 log("updated schedule json")
-        elif config['json_flavour'] == 'voc-schema':
+        elif config["json_flavour"] == "voc-schema":
             try:
                 r = get(schedule_url)
                 r.raise_for_status()
@@ -108,15 +109,19 @@ def main():
                 log("getting schedule.json failed: {}".format(repr(e)))
             else:
                 raw_schedule = r.json()
-                schedule = {'talks': []}
+                schedule = {"talks": []}
 
-                event_start = datetime.strptime(raw_schedule["conference"]["start"][:10], "%Y-%m-%d")
+                event_start = datetime.strptime(
+                    raw_schedule["conference"]["start"][:10], "%Y-%m-%d"
+                )
                 event_tz = pytz.timezone(raw_schedule["conference"]["time_zone_name"])
 
                 for day in raw_schedule["days"]:
                     for room in day["rooms"].values():
                         for talk in room:
-                            start = datetime.strptime(talk["date"][:19], "%Y-%m-%dT%H:%M%:S").replace(tzinfo=event_tz)
+                            start = datetime.strptime(
+                                talk["date"][:19], "%Y-%m-%dT%H:%M%:S"
+                            ).replace(tzinfo=event_tz)
                             d_h, d_m = talk["duration"].split(":")
                             end = start + timedelta(hours=int(d_h), minutes=int(d_m))
 
@@ -144,6 +149,8 @@ def main():
                             schedule["talks"].append(talk)
                 node.write_json("schedule.json", schedule)
                 log("updated schedule json")
+        else:
+            log("unknown json flavour, something is very wrong")
 
         idle(30, event_start, event_tz)
 
