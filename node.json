@@ -28,8 +28,19 @@
         "title": "Schedule",
         "type": "section"
     }, {
-        "title": "Event URL",
-        "name": "event_url",
+        "title": "JSON flavour",
+        "ui_width": 12,
+        "name": "json_flavour",
+        "type": "select",
+        "default": "pretalx-broadcast-tools",
+        "options": [
+            ["pretalx-broadcast-tools", "pretalx-broadcast-tools (input event URL below)"],
+            ["voc-schema", "C3VOC JSON schema compatible (input JSON URL below)"]
+        ]
+    }, {
+        "title": "Schedule URL",
+        "ui_width": 12,
+        "name": "schedule_url",
         "type": "string",
         "default": "https://pretalx.example.com/my-super-cool-event/"
     }, {
