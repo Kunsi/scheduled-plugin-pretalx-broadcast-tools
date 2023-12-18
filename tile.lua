@@ -4,7 +4,8 @@ local json = require "json"
 local helper = require "helper"
 local anims = require(api.localized "anims")
 
-local font
+local font_running
+local font_headline
 local white = resource.create_colored_texture(1,1,1)
 local fallback_track_background = resource.create_colored_texture(.5,.5,.5,1)
 
@@ -39,7 +40,8 @@ end
 
 function M.updated_config_json(config)
     log("running on device ".. tostring(sys.get_env "SERIAL"))
-    font = resource.load_font(api.localized(config.font.asset_name))
+    font_running = resource.load_font(api.localized(config.font.asset_name))
+    font_headline = resource.load_font(api.localized(config.font_headline.asset_name))
     show_language = config.show_language
     show_track = config.show_track
 
@@ -134,7 +136,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
     local E = ends
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font, ...))
+        return a.add(anims.moving_font(S, E, font_running, ...))
     end
 
     local x, y = 0, 0
@@ -148,7 +150,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
     local current_talk = room_next_talks[1]
 
     local col1 = 0
-    local col2 = 35 + font:width("in XXX min", time_size)
+    local col2 = 35 + font_running:width("in XXX min", time_size)
 
     if #schedule == 0 then
         text(col2, y, "Fetching talks...", time_size, rgba(default_color,1))
@@ -180,7 +182,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             title = title .. " (" .. current_talk.locale .. ")"
         end
 
-        local lines = wrap(title, font, title_size, a.width - col2)
+        local lines = wrap(title, font_running, title_size, a.width - col2)
         for idx = 1, math.min(5, #lines) do
             text(col2, y, lines[idx], title_size, rgba(default_color,1))
             y = y + title_size
@@ -188,7 +190,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
         y = y + 20
 
         -- Show abstract only if it fits into the drawing area completely
-        local lines = wrap(current_talk.abstract, font, abstract_size, a.width - col2)
+        local lines = wrap(current_talk.abstract, font_running, abstract_size, a.width - col2)
         if show_abstract and a.height > (y + #lines*abstract_size + 20) then
             for idx = 1, #lines do
                 text(col2, y, lines[idx], abstract_size, rgba(default_color,1))
@@ -244,12 +246,12 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
     -- always leave room for 15px of track bar
     local col1 = 0
-    local col2 = 35 + font:width("XXX min ago", time_size)
+    local col2 = 35 + font_running:width("XXX min ago", time_size)
 
     local x, y = 0, 0
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font, ...))
+        return a.add(anims.moving_font(S, E, font_running, ...))
     end
 
     if #schedule == 0 then
@@ -270,7 +272,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         local title_lines = wrap(
             title,
-            font, title_size, a.width - col2
+            font_running, title_size, a.width - col2
         )
 
         local info_line = talk.room
@@ -284,7 +286,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
 
         local info_lines = wrap(
             info_line,
-            font, info_size, a.width - col2
+            font_running, info_size, a.width - col2
         )
 
         if y + #title_lines * title_size + 3 + #info_lines * info_size > a.height then
@@ -305,7 +307,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         else
             talk_time = string.format("%d min ago", math.ceil(-delta/60))
         end
-        local time_width = font:width(talk_time, time_size)
+        local time_width = font_running:width(talk_time, time_size)
         text(col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
 
         if show_track and talk.track and talk.track.color then
@@ -350,11 +352,11 @@ local function view_room(starts, ends, config, x1, y1, x2, y2)
     local E = ends
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font, ...))
+        return a.add(anims.moving_font(S, E, font_headline, ...))
     end
 
     local x = 0
-    local w = font:width(current_room, font_size)
+    local w = font_headline:width(current_room, font_size)
     if align == "right" then
         x = a.width - w
     elseif align == "center" then
@@ -366,7 +368,7 @@ local function view_room(starts, ends, config, x1, y1, x2, y2)
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
-            font:write(x1+x, y1, current_room, font_size, r,g,b,1)
+            font_headline:write(x1+x, y1, current_room, font_size, r,g,b,1)
         end
     end
 end
@@ -385,12 +387,12 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
     local E = ends
 
     local function text(...)
-        return a.add(anims.moving_font(S, E, font, ...))
+        return a.add(anims.moving_font(S, E, font_running, ...))
     end
 
     local x = 0
     local line = string.format(template, day)
-    local w = font:width(line, font_size)
+    local w = font_running:width(line, font_size)
     if align == "right" then
         x = a.width - w
     elseif align == "center" then
@@ -402,7 +404,7 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
-            font:write(x1+x, y1, line, font_size, r,g,b,1)
+            font_running:write(x1+x, y1, line, font_size, r,g,b,1)
         end
     end
 end

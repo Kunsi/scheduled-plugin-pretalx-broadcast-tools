@@ -7,8 +7,14 @@
         "title": "Design",
         "type": "section"
     }, {
-        "title": "Font",
-        "ui_width": 12,
+        "title": "Font (headline",
+        "ui_width": 6,
+        "name": "font_headline",
+        "type": "font",
+        "default": "silkscreen.ttf"
+    }, {
+        "title": "Font (running text)",
+        "ui_width": 6,
         "name": "font",
         "type": "font",
         "default": "silkscreen.ttf"
