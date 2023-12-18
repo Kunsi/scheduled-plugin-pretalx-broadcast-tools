@@ -25,6 +25,12 @@
         "type": "font",
         "default": "silkscreen.ttf"
     }, {
+        "title": "Clock",
+        "ui_width": 6,
+        "name": "font_clock",
+        "type": "font",
+        "default": "silkscreen.ttf"
+    }, {
         "title": "all other text",
         "ui_width": 6,
         "name": "font_text",
@@ -45,6 +51,13 @@
         "name": "show_track",
         "type": "boolean",
         "default": true
+    }, {
+        "title": "Clock format",
+        "ui_width": 4,
+        "name": "clock_format",
+        "type": "string",
+        "default": "%H:%M",
+        "hint": "strftime() format specifier"
     }, {
         "title": "Schedule",
         "type": "section"

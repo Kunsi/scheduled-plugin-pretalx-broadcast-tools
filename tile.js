@@ -11,6 +11,7 @@ var config = {
             <option value="next_talk">Next Talk</option>
             <option value="room">Room Name</option>
             <option value="day">Day</option>
+            <option value="clock">Clock</option>
           </select>
         </div>
         <div class='col-xs-3'>
@@ -60,7 +61,7 @@ var config = {
         </div>
       </template>
       <template v-if='mode == "room"'>
-        <h4>room options</h4>
+        <h4>Room options</h4>
         <div class='row'>
           <div class='col-xs-3'>
             Alignment<br/>
@@ -74,6 +75,26 @@ var config = {
             <input
               type="checkbox"
               v-model="room_animate"
+              class='form-check-input'/>
+            Fade in and out
+          </div>
+        </div>
+      </template>
+      <template v-if='mode == "clock"'>
+        <h4>Clock options</h4>
+        <div class='row'>
+          <div class='col-xs-3'>
+            Alignment<br/>
+            <select class='btn btn-default' v-model="clock_align">
+              <option value="left">Align left</option>
+              <option value="center">Align centered</option>
+              <option value="right">Align right</option>
+            </select>
+          </div>
+          <div class='col-xs-3'>
+            <input
+              type="checkbox"
+              v-model="clock_animate"
               class='form-check-input'/>
             Fade in and out
           </div>
@@ -121,6 +142,9 @@ var config = {
 
     room_align: ChildTile.config_value('room_align', 'left'),
     room_animate: ChildTile.config_value('room_animate', true),
+
+    clock_align: ChildTile.config_value('clock_align', 'left'),
+    clock_animate: ChildTile.config_value('clock_animate', true),
 
     day_align: ChildTile.config_value('day_align', 'left'),
     day_template: ChildTile.config_value('day_template', 'Day %d'),

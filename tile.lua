@@ -4,6 +4,7 @@ local json = require "json"
 local helper = require "helper"
 local anims = require(api.localized "anims")
 
+local font_clock
 local font_day
 local font_room
 local font_talk
@@ -18,6 +19,7 @@ local room_next_talks = {}
 local current_room
 local day = 0
 local time = 0
+local clock = "??"
 local show_language = true
 local show_track = true
 
@@ -35,6 +37,8 @@ function M.data_trigger(path, data)
     log("received data '" .. data .. "' on " .. path)
     if path == "day" then
         day = tonumber(data)
+    elseif path == "clock" then
+        clock = data
     elseif path == "time" then
         time = tonumber(data)
     end
@@ -45,6 +49,7 @@ function M.updated_config_json(config)
     show_language = config.show_language
     show_track = config.show_track
 
+    font_clock = resource.load_font(api.localized(config.font_clock.asset_name))
     font_day = resource.load_font(api.localized(config.font_day.asset_name))
     font_room = resource.load_font(api.localized(config.font_room.asset_name))
     font_talk = resource.load_font(api.localized(config.font_talk.asset_name))
@@ -375,6 +380,40 @@ local function view_room(starts, ends, config, x1, y1, x2, y2)
     end
 end
 
+local function view_clock(starts, ends, config, x1, y1, x2, y2)
+    local font_size = config.font_size or 70
+    local align = config.clock_align or "left"
+    local animate = config.clock_animate or true
+    local default_color = {helper.parse_rgb(config.color or "#ffffff")}
+    local r,g,b = helper.parse_rgb(config.color or "#ffffff")
+
+    local a = anims.Area(x2 - x1, y2 - y1)
+
+    local S = starts
+    local E = ends
+
+    local function text(...)
+        return a.add(anims.moving_font(S, E, ...))
+    end
+
+    local x = 0
+    local w = font_clock:width(clock, font_size)
+    if align == "right" then
+        x = a.width - w
+    elseif align == "center" then
+        x = (a.width - w) / 2
+    end
+    text(font_clock, x, 0, clock, font_size, rgba(default_color,1))
+
+    for now in api.frame_between(starts, ends) do
+        if animate then
+            a.draw(now, x1, y1, x2, y2)
+        else
+            font_clock:write(x1+x, y1, current_room, font_size, r,g,b,1)
+        end
+    end
+end
+
 local function view_day(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
     local align = config.day_align or "left"
@@ -419,6 +458,7 @@ function M.task(starts, ends, config, x1, y1, x2, y2)
 
         room = view_room,
         day = view_day,
+        clock = view_clock,
     })[config.mode or 'all_talks'](starts, ends, config, x1, y1, x2, y2)
 end
 
@@ -426,7 +466,8 @@ function M.can_show(config)
     local mode = config.mode or 'all_talks'
     -- these can always play
     if mode == "day" or
-       mode == "all_talks"
+       mode == "all_talks" or
+       mode == "clock"
     then
         return true
     end
