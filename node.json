@@ -97,6 +97,22 @@
             "name": "serial",
             "type": "device",
             "default": ""
+        }, {
+            "title": "Text block A",
+            "ui_width": 6,
+            "name": "text_a",
+            "type": "text",
+            "hint": "Room-Specific text A",
+            "rows": 6,
+            "default": ""
+        }, {
+            "title": "Text block B",
+            "ui_width": 6,
+            "name": "text_b",
+            "type": "text",
+            "hint": "Room-Specific text B",
+            "rows": 6,
+            "default": ""
         }]
     }]
 }

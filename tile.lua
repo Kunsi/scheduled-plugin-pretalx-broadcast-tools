@@ -17,6 +17,8 @@ local rooms = {}
 local all_next_talks = {}
 local room_next_talks = {}
 local current_room
+local text_a
+local text_b
 local day = 0
 local time = 0
 local clock = "??"
@@ -61,6 +63,8 @@ function M.updated_config_json(config)
         if room.serial == sys.get_env "SERIAL" then
             log("found my room: ", room.name)
             current_room = room.name
+            text_a = room.text_a
+            text_b = room.text_b
         end
     end
 end
@@ -450,6 +454,70 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
     end
 end
 
+local function view_info(starts, ends, config, x1, y1, x2, y2)
+    local font_size = config.font_size or 70
+    local align = config.info_align or "left"
+    local animate = config.info_animate or true
+    local default_color = {helper.parse_rgb(config.color or "#ffffff")}
+    local r,g,b = helper.parse_rgb(config.color or "#ffffff")
+    local text_source = config.info_text_source or "a"
+
+    local a = anims.Area(x2 - x1, y2 - y1)
+
+    local S = starts
+    local E = ends
+
+    local function text(...)
+        return a.add(anims.moving_font(S, E, ...))
+    end
+
+    local info_text = text_a
+    if text_source == "b" then
+        info_text = text_b
+    end
+
+    local lines = wrap(
+        info_text,
+        font_text, font_size, a.width
+    )
+
+    local y = 0
+    for idx = 1, #lines do
+        local x = 0
+        local w = font_text:width(lines[idx], font_size)
+
+        if align == "right" then
+            x = a.width - w
+        elseif align == "center" then
+            x = (a.width - w) / 2
+        end
+
+        text(font_text, x, y, lines[idx], font_size, rgba(default_color,.8))
+        y = y + font_size
+    end
+
+    for now in api.frame_between(starts, ends) do
+        if animate then
+            a.draw(now, x1, y1, x2, y2)
+        else
+            local y = 0
+            for idx = 1, #lines do
+                local x = 0
+                local w = font_text:width(lines[idx], font_size)
+
+                if align == "right" then
+                    x = a.width - w
+                elseif align == "center" then
+                    x = (a.width - w) / 2
+                end
+
+                font_text:write(x, y, lines[idx], font_size, r,g,b,1)
+                y = y + font_size
+            end
+        end
+    end
+end
+
 function M.task(starts, ends, config, x1, y1, x2, y2)
     check_next_talks()
     return ({
@@ -459,6 +527,7 @@ function M.task(starts, ends, config, x1, y1, x2, y2)
         room = view_room,
         day = view_day,
         clock = view_clock,
+        info = view_info,
     })[config.mode or 'all_talks'](starts, ends, config, x1, y1, x2, y2)
 end
 

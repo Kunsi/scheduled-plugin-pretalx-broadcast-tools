@@ -12,6 +12,7 @@ var config = {
             <option value="room">Room Name</option>
             <option value="day">Day</option>
             <option value="clock">Clock</option>
+            <option value="info">Info text</option>
           </select>
         </div>
         <div class='col-xs-3'>
@@ -128,6 +129,33 @@ var config = {
           </div>
         </div>
       </template>
+      <template v-if='mode == "info"'>
+        <h4>Info options</h4>
+        <div class='row'>
+          <div class='col-xs-3'>
+            Alignment<br/>
+            <select class='btn btn-default' v-model="info_align">
+              <option value="left">Align left</option>
+              <option value="center">Align centered</option>
+              <option value="right">Align right</option>
+            </select>
+          </div>
+          <div class='col-xs-3'>
+            Text source<br/>
+            <select class='btn btn-default' v-model="info_text_source">
+              <option value="a">Text A</option>
+              <option value="b">Text B</option>
+            </select>
+          </div>
+          <div class='col-xs-3'>
+            <input
+              type="checkbox"
+              v-model="info_animate"
+              class='form-check-input'/>
+            Fade in and out
+          </div>
+        </div>
+      </template>
     </div>
   `,
   computed: {
@@ -144,11 +172,15 @@ var config = {
     room_animate: ChildTile.config_value('room_animate', true),
 
     clock_align: ChildTile.config_value('clock_align', 'left'),
-    clock_animate: ChildTile.config_value('clock_animate', true),
+    clock_animate: ChildTile.config_value('clock_animate', false),
 
     day_align: ChildTile.config_value('day_align', 'left'),
     day_template: ChildTile.config_value('day_template', 'Day %d'),
     day_animate: ChildTile.config_value('day_animate', false),
+
+    info_align: ChildTile.config_value('info_align', 'left'),
+    info_animate: ChildTile.config_value('info_animate', true),
+    info_text_source: ChildTile.config_value('info_text_source', 'a'),
   }
 }
 
