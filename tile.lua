@@ -476,24 +476,26 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
         info_text = text_b
     end
 
-    local lines = wrap(
-        info_text,
-        font_text, font_size, a.width
-    )
-
     local y = 0
-    for idx = 1, #lines do
-        local x = 0
-        local w = font_text:width(lines[idx], font_size)
+    for line in string.gmatch(info_text.."\n", "([^\n]*)\n") do
+        local lines = wrap(
+            line,
+            font_text, font_size, a.width
+        )
 
-        if align == "right" then
-            x = a.width - w
-        elseif align == "center" then
-            x = (a.width - w) / 2
+        for idx = 1, #lines do
+            local x = 0
+            local w = font_text:width(lines[idx], font_size)
+
+            if align == "right" then
+                x = a.width - w
+            elseif align == "center" then
+                x = (a.width - w) / 2
+            end
+
+            text(font_text, x, y, lines[idx], font_size, rgba(default_color,.8))
+            y = y + font_size
         end
-
-        text(font_text, x, y, lines[idx], font_size, rgba(default_color,.8))
-        y = y + font_size
     end
 
     for now in api.frame_between(starts, ends) do
@@ -501,18 +503,25 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
             a.draw(now, x1, y1, x2, y2)
         else
             local y = 0
-            for idx = 1, #lines do
-                local x = 0
-                local w = font_text:width(lines[idx], font_size)
+            for line in string.gmatch(info_text.."\n", "([^\n]*)\n") do
+                local lines = wrap(
+                    line,
+                    font_text, font_size, a.width
+                )
 
-                if align == "right" then
-                    x = a.width - w
-                elseif align == "center" then
-                    x = (a.width - w) / 2
+                for idx = 1, #lines do
+                    local x = 0
+                    local w = font_text:width(lines[idx], font_size)
+
+                    if align == "right" then
+                        x = a.width - w
+                    elseif align == "center" then
+                        x = (a.width - w) / 2
+                    end
+
+                    font_text:write(x, y, lines[idx], font_size, r,g,b,1)
+                    y = y + font_size
                 end
-
-                font_text:write(x, y, lines[idx], font_size, r,g,b,1)
-                y = y + font_size
             end
         end
     end
