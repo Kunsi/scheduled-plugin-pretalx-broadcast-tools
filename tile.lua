@@ -409,7 +409,7 @@ local function view_clock(starts, ends, config, x1, y1, x2, y2)
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
-            font_clock:write(x1+x, y1, current_room, font_size, r,g,b,1)
+            font_clock:write(x1+x, y1, clock, font_size, r,g,b,1)
         end
     end
 end
