@@ -383,7 +383,7 @@ end
 local function view_clock(starts, ends, config, x1, y1, x2, y2)
     local font_size = config.font_size or 70
     local align = config.clock_align or "left"
-    local animate = config.clock_animate or true
+    local animate = config.clock_animate or false
     local default_color = {helper.parse_rgb(config.color or "#ffffff")}
     local r,g,b = helper.parse_rgb(config.color or "#ffffff")
 
