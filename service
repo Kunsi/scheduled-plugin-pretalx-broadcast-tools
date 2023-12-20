@@ -149,7 +149,7 @@ def main():
 
                             persons = []
                             for p in talk["persons"]:
-                                persons.append(p["public_name"])
+                                persons.append(p.get("public_name", p["name"]))
                             talk["persons"] = persons
 
                             schedule["talks"].append(talk)
