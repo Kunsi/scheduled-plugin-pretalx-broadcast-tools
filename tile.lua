@@ -413,6 +413,13 @@ local function view_clock(starts, ends, config, x1, y1, x2, y2)
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
+            x = 0
+            w = font_clock:width(clock, font_size)
+            if align == "right" then
+                x = a.width - w
+            elseif align == "center" then
+                x = (a.width - w) / 2
+            end
             font_clock:write(x1+x, y1, clock, font_size, r,g,b,1)
         end
     end
@@ -449,6 +456,14 @@ local function view_day(starts, ends, config, x1, y1, x2, y2)
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
+            x = 0
+            line = string.format(template, day)
+            w = font_day:width(line, font_size)
+            if align == "right" then
+                x = a.width - w
+            elseif align == "center" then
+                x = (a.width - w) / 2
+            end
             font_day:write(x1+x, y1, line, font_size, r,g,b,1)
         end
     end
