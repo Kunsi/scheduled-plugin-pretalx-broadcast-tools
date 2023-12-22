@@ -3,7 +3,7 @@
     "author": "git@kunsmann.eu",
     "desc": "Shows information provided by pretalx-broadcast-tools",
     "nesting": {
-        "parents": ["scheduled-plugin"],
+        "parents": ["scheduled-plugin", "top-level"],
         "childs": []
     },
     "platforms": ["pi/epoch-1", "pi/epoch-2"],
