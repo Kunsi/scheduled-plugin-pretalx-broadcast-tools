@@ -140,7 +140,7 @@ function node.render()
             r,g,b = parse_rgb(track.color)
             local track_width = font_talk:width(track.name, info_size)
             local brightness = math.max(r, g, b)
-            if track_x - track_width < 0 then
+            if track_x - track_width < PADDING then
                 track_x = NATIVE_WIDTH - PADDING
                 track_y = track_y - info_size - PADDING
                 space_used_for_tracks = space_used_for_tracks + 1
@@ -168,7 +168,7 @@ function node.render()
                     1, 1, 1, 1
                 )
             end
-            track_x = track_x - track_width - PADDING*2
+            track_x = track_x - track_width - PADDING
         end
     end
 
