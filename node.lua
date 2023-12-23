@@ -132,19 +132,42 @@ function node.render()
     local col2 = PADDING*2 + 15 + font_text:width("XXX min ago", time_size)
 
     local track_x = 0
-    local track_y = NATIVE_HEIGHT - PADDING
+    local track_y = NATIVE_HEIGHT - PADDING*0.3
     local space_used_for_tracks = 0
     for idx = 1, #tracks do
         track = tracks[idx]
         if track.color ~= json.null then
             r,g,b = parse_rgb(track.color)
             local track_width = font_talk:width(track.name, info_size)
+            local brightness = math.max(r, g, b)
             if track_x - track_width < 0 then
                 track_x = NATIVE_WIDTH - PADDING
-                track_y = track_y - info_size
+                track_y = track_y - info_size - PADDING
                 space_used_for_tracks = space_used_for_tracks + 1
             end
-            font_talk:write(track_x - track_width, track_y, track.name, info_size, r,g,b,1)
+            resource.create_colored_texture(r,g,b,1):draw(
+                track_x - track_width - PADDING*0.3,
+                track_y - PADDING*0.3,
+                track_x + PADDING*0.3,
+                track_y + info_size + PADDING*0.3
+            )
+            if brightness > 0.6 then
+                font_talk:write(
+                    track_x - track_width,
+                    track_y,
+                    track.name,
+                    info_size,
+                    0, 0, 0, 1
+                )
+            else
+                font_talk:write(
+                    track_x - track_width,
+                    track_y,
+                    track.name,
+                    info_size,
+                    1, 1, 1, 1
+                )
+            end
             track_x = track_x - track_width - PADDING*2
         end
     end
