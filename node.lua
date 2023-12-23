@@ -132,7 +132,7 @@ function node.render()
     local col2 = PADDING*2 + 15 + font_text:width("XXX min ago", time_size)
 
     local track_x = 0
-    local track_y = NATIVE_HEIGHT
+    local track_y = NATIVE_HEIGHT - PADDING
     local space_used_for_tracks = 0
     for idx = 1, #tracks do
         track = tracks[idx]
@@ -182,7 +182,7 @@ function node.render()
             font_text, info_size, NATIVE_WIDTH - col2 - PADDING
         )
 
-        if y + #title_lines * TALK_FONT_SIZE + 3 + #info_lines * info_size > NATIVE_HEIGHT - space_used_for_tracks*info_size then
+        if y + #title_lines * TALK_FONT_SIZE + 3 + #info_lines * info_size > NATIVE_HEIGHT - space_used_for_tracks*info_size - PADDING*2 then
             break
         end
 
