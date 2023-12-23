@@ -205,7 +205,7 @@ function node.render()
             font_text, info_size, NATIVE_WIDTH - col2 - PADDING
         )
 
-        if y + #title_lines * TALK_FONT_SIZE + 3 + #info_lines * info_size > NATIVE_HEIGHT - space_used_for_tracks*info_size - PADDING*2 then
+        if y + #title_lines * TALK_FONT_SIZE + 3 + #info_lines * info_size > NATIVE_HEIGHT - space_used_for_tracks*(info_size+PADDING) - PADDING then
             break
         end
 
