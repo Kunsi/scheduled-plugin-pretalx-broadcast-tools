@@ -14,6 +14,7 @@ local day = 0
 local time = 0
 local clock = "??"
 local schedule = {}
+local tracks = {}
 local all_next_talks = {}
 local show_language = true
 local show_track = true
@@ -24,9 +25,10 @@ local function log(what)
     return print("[pretalx] " .. what)
 end
 
-util.file_watch("schedule.json", function(new_schedule)
+util.json_watch("schedule.json", function(new_schedule)
     log("new schedule")
-    schedule = json.decode(new_schedule).talks
+    schedule = new_schedule.talks
+    tracks = new_schedule.tracks
 end)
 
 util.file_watch("config.json", function(content)
@@ -129,6 +131,24 @@ function node.render()
     local col1 = PADDING
     local col2 = PADDING*2 + 15 + font_text:width("XXX min ago", time_size)
 
+    local track_x = 0
+    local track_y = NATIVE_HEIGHT
+    local space_used_for_tracks = 0
+    for idx = 1, #tracks do
+        track = tracks[idx]
+        if track.color ~= json.null then
+            r,g,b = parse_rgb(track.color)
+            local track_width = font_text:width(track.name, info_size)
+            if track_x - track_width < 0 then
+                track_x = NATIVE_WIDTH - PADDING
+                track_y = track_y - info_size
+                space_used_for_tracks = space_used_for_tracks + 1
+            end
+            font_text:write(track_x - track_width, track_y, track.name, info_size, r,g,b,1)
+            track_x = track_x - track_width - PADDING*2
+        end
+    end
+
     if #schedule == 0 then
         font_text:write(col2, y, "Fetching talks...", TALK_FONT_SIZE, 1, 1, 1, 1)
     elseif #all_next_talks == 0 and #schedule > 0 and sys.now() > 30 then
@@ -162,7 +182,7 @@ function node.render()
             font_text, info_size, NATIVE_WIDTH - col2 - PADDING
         )
 
-        if y + #title_lines * TALK_FONT_SIZE + 3 + #info_lines * info_size > NATIVE_HEIGHT then
+        if y + #title_lines * TALK_FONT_SIZE + 3 + #info_lines * info_size > NATIVE_HEIGHT - space_used_for_tracks*info_size then
             break
         end
 

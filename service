@@ -98,6 +98,7 @@ def main():
                 # we need.
             else:
                 schedule = r.json()
+                schedule["tracks"] = []
                 for talk in schedule["talks"]:
                     talk["start_str"] = (
                         datetime.fromtimestamp(talk["start_ts"])
@@ -115,7 +116,10 @@ def main():
                 log("getting schedule.json failed: {}".format(repr(e)))
             else:
                 raw_schedule = r.json()["schedule"]
-                schedule = {"talks": []}
+                schedule = {
+                    "tracks": raw_schedule["conference"]["tracks"],
+                    "talks": [],
+                }
 
                 event_start = datetime.strptime(
                     raw_schedule["conference"]["start"][:10], "%Y-%m-%d"
