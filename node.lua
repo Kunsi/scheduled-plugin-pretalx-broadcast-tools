@@ -138,13 +138,13 @@ function node.render()
         track = tracks[idx]
         if track.color ~= json.null then
             r,g,b = parse_rgb(track.color)
-            local track_width = font_text:width(track.name, info_size)
+            local track_width = font_talk:width(track.name, info_size)
             if track_x - track_width < 0 then
                 track_x = NATIVE_WIDTH - PADDING
                 track_y = track_y - info_size
                 space_used_for_tracks = space_used_for_tracks + 1
             end
-            font_text:write(track_x - track_width, track_y, track.name, info_size, r,g,b,1)
+            font_talk:write(track_x - track_width, track_y, track.name, info_size, r,g,b,1)
             track_x = track_x - track_width - PADDING*2
         end
     end
