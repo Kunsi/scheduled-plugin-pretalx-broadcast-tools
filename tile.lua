@@ -493,23 +493,27 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
 
     local y = 0
     for line in string.gmatch(info_text.."\n", "([^\n]*)\n") do
-        local lines = wrap(
-            line,
-            font_text, font_size, a.width
-        )
+        if line ~= "" then
+            local lines = wrap(
+                line,
+                font_text, font_size, a.width
+            )
 
-        for idx = 1, #lines do
-            local x = 0
-            local w = font_text:width(lines[idx], font_size)
+            for idx = 1, #lines do
+                local x = 0
+                local w = font_text:width(lines[idx], font_size)
 
-            if align == "right" then
-                x = a.width - w
-            elseif align == "center" then
-                x = (a.width - w) / 2
+                if align == "right" then
+                    x = a.width - w
+                elseif align == "center" then
+                    x = (a.width - w) / 2
+                end
+
+                text(font_text, x, y, lines[idx], font_size, rgba(default_color,.8))
+                y = y + font_size
             end
-
-            text(font_text, x, y, lines[idx], font_size, rgba(default_color,.8))
-            y = y + font_size
+        else
+            y = y + font_size*0.5
         end
     end
 
