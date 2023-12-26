@@ -182,7 +182,7 @@ function node.render()
         local talk = all_next_talks[idx]
 
         local title = talk.title
-        if show_language and talk.locale then
+        if show_language and talk.locale ~= json.null then
             title = title .. " (" .. talk.locale .. ")"
         end
 
@@ -196,7 +196,7 @@ function node.render()
         if #talk.persons > 0 then
             local joiner = ({
                 de = "mit",
-            })[talk.locale] or "with"
+            })[talk.locale or ""] or "with"
             info_line = info_line .. " " .. joiner .. " " .. table.concat(talk.persons, ", ")
         end
 

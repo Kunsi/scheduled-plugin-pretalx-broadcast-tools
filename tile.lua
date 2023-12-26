@@ -192,7 +192,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
         local y_start = y
 
         local title = current_talk.title
-        if show_language and current_talk.locale then
+        if show_language and current_talk.locale ~= json.null then
             title = title .. " (" .. current_talk.locale .. ")"
         end
 
@@ -278,7 +278,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         local talk = all_next_talks[idx]
 
         local title = talk.title
-        if show_language and talk.locale then
+        if show_language and talk.locale ~= json.null then
             title = title .. " (" .. talk.locale .. ")"
         end
 
@@ -292,7 +292,7 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         if show_speakers and #talk.persons > 0 then
             local joiner = ({
                 de = "mit",
-            })[talk.locale] or "with"
+            })[talk.locale or ""] or "with"
             info_line = info_line .. " " .. joiner .. " " .. table.concat(talk.persons, ", ")
         end
 
