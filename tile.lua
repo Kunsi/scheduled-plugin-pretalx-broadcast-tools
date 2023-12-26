@@ -112,6 +112,8 @@ local function check_next_talks()
 
     if current_room then
         log("my room is '" .. current_room .. "'")
+    else
+        log("running without room selection!")
     end
 
     for idx = 1, #schedule do
