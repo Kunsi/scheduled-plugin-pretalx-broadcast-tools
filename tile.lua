@@ -63,7 +63,7 @@ function M.updated_config_json(config)
     for idx, room in ipairs(config.rooms) do
         log(tostring(room.serial) .. " room '" .. room.name .. "'")
         if room.serial == sys.get_env "SERIAL" then
-            log("found my room: ", room.name)
+            log("found my room: " .. room.name)
             current_room = room.name
             text_a = room.text_a
             text_b = room.text_b
