@@ -9,6 +9,7 @@ local font_day
 local font_room
 local font_talk
 local font_text
+local font_track
 local white = resource.create_colored_texture(1,1,1)
 local fallback_track_background = resource.create_colored_texture(.5,.5,.5,1)
 

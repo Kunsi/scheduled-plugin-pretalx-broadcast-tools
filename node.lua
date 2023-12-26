@@ -9,6 +9,7 @@ local font_day
 local font_room
 local font_talk
 local font_text
+local font_track
 
 local day = 0
 local time = 0
