@@ -56,6 +56,7 @@ function M.updated_config_json(config)
     font_room = resource.load_font(api.localized(config.font_room.asset_name))
     font_talk = resource.load_font(api.localized(config.font_talk.asset_name))
     font_text = resource.load_font(api.localized(config.font_text.asset_name))
+    font_track = resource.load_font(api.localized(config.font_track.asset_name))
 
     current_room = nil
     for idx, room in ipairs(config.rooms) do
@@ -228,7 +229,7 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             end
             if track_text then
                 if a.height > y + 20 + track_size then
-                    text(font_text, col2, y+20, current_talk.track.name, track_size, r,g,b,1)
+                    text(font_track, col2, y+20, current_talk.track.name, track_size, r,g,b,1)
                 end
             elseif current_talk.track.color ~= json.null then
                 a.add(anims.moving_image_raw(

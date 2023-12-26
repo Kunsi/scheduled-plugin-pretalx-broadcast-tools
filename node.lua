@@ -43,6 +43,7 @@ util.file_watch("config.json", function(content)
     font_room = resource.load_font(config.font_room.asset_name)
     font_talk = resource.load_font(config.font_talk.asset_name)
     font_text = resource.load_font(config.font_text.asset_name)
+    font_track = resource.load_font(config.font_track.asset_name)
 end)
 
 util.data_mapper{
@@ -138,7 +139,7 @@ function node.render()
         track = tracks[idx]
         if track.color ~= json.null then
             r,g,b = parse_rgb(track.color)
-            local track_width = font_talk:width(track.name, info_size)
+            local track_width = font_track:width(track.name, info_size)
             local brightness = math.max(r, g, b)
             if track_x - track_width < PADDING then
                 track_x = NATIVE_WIDTH - PADDING
@@ -152,7 +153,7 @@ function node.render()
                 track_y + info_size + PADDING*0.3
             )
             if brightness > 0.6 then
-                font_talk:write(
+                font_track:write(
                     track_x - track_width,
                     track_y,
                     track.name,
@@ -160,7 +161,7 @@ function node.render()
                     0, 0, 0, 1
                 )
             else
-                font_talk:write(
+                font_track:write(
                     track_x - track_width,
                     track_y,
                     track.name,

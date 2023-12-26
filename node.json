@@ -7,13 +7,13 @@
         "title": "Fonts",
         "type": "section"
     }, {
-        "title": "Room name",
+        "title": "Room Name",
         "ui_width": 6,
         "name": "font_room",
         "type": "font",
         "default": "silkscreen.ttf"
     }, {
-        "title": "Talk title",
+        "title": "Talk Title",
         "ui_width": 6,
         "name": "font_talk",
         "type": "font",
@@ -28,6 +28,12 @@
         "title": "Clock",
         "ui_width": 6,
         "name": "font_clock",
+        "type": "font",
+        "default": "silkscreen.ttf"
+    }, {
+        "title": "Track Name",
+        "ui_width": 6,
+        "name": "font_track",
         "type": "font",
         "default": "silkscreen.ttf"
     }, {
