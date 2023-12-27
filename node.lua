@@ -73,12 +73,14 @@ local function check_next_talks()
 
     all_next_talks = {}
 
+    local min_start = time - 25 * 60
+
     for idx = 1, #schedule do
         local talk = schedule[idx]
 
         -- Ignore all talks that have already ended here. We don't want
         -- to announce these.
-        if talk.end_ts > time then
+        if talk.end_ts > time and talk.start_ts > min_start then
             all_next_talks[#all_next_talks+1] = talk
         end
     end
