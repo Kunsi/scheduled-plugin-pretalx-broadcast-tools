@@ -19,6 +19,7 @@ local tracks = {}
 local all_next_talks = {}
 local show_language = true
 local show_track = true
+local hide_talks_older_than_minutes = 25
 
 gl.setup(NATIVE_WIDTH, NATIVE_HEIGHT)
 
@@ -38,6 +39,7 @@ util.file_watch("config.json", function(content)
     log("running on device ".. tostring(sys.get_env "SERIAL"))
     show_language = config.show_language
     show_track = config.show_track
+    hide_talks_older_than_minutes = config.hide_talks_older_than_minutes
 
     font_clock = resource.load_font(config.font_clock.asset_name)
     font_day = resource.load_font(config.font_day.asset_name)
@@ -73,7 +75,7 @@ local function check_next_talks()
 
     all_next_talks = {}
 
-    local min_start = time - 25 * 60
+    local min_start = time - hide_talks_older_than_minutes * 60
 
     for idx = 1, #schedule do
         local talk = schedule[idx]

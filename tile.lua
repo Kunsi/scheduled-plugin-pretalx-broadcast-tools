@@ -25,6 +25,7 @@ local time = 0
 local clock = "??"
 local show_language = true
 local show_track = true
+local hide_talks_older_than_minutes = 25
 
 local M = {}
 
@@ -51,6 +52,7 @@ function M.updated_config_json(config)
     log("running on device ".. tostring(sys.get_env "SERIAL"))
     show_language = config.show_language
     show_track = config.show_track
+    hide_talks_older_than_minutes = config.hide_talks_older_than_minutes
 
     font_clock = resource.load_font(api.localized(config.font_clock.asset_name))
     font_day = resource.load_font(api.localized(config.font_day.asset_name))
@@ -109,7 +111,7 @@ local function check_next_talks()
     room_next_talks = {}
     all_next_talks = {}
 
-    local min_start = time - 25 * 60
+    local min_start = time - hide_talks_older_than_minutes * 60
 
     if current_room then
         log("my room is '" .. current_room .. "'")

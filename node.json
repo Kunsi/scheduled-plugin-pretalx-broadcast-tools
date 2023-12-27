@@ -58,12 +58,19 @@
         "type": "boolean",
         "default": true
     }, {
-        "title": "Clock format",
+        "title": "Clock Format",
         "ui_width": 4,
         "name": "clock_format",
         "type": "string",
         "default": "%H:%M",
         "hint": "strftime() format specifier"
+    }, {
+        "title": "Hide Talks Older Than",
+        "ui_width": 4,
+        "name": "hide_talks_older_than_minutes",
+        "type": "integer",
+        "default": 25,
+        "hint": "Hide talks from schedule view if they started more than X minutes ago. Talks that have already ended will never be shown."
     }, {
         "title": "Schedule",
         "type": "section"
