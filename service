@@ -125,20 +125,19 @@ def main():
                     raw_schedule["conference"]["start"][:10], "%Y-%m-%d"
                 )
                 event_tz = pytz.timezone(raw_schedule["conference"]["time_zone_name"])
-                utc_offset = datetime.now(event_tz).utcoffset().total_seconds()
 
                 for day in raw_schedule["conference"]["days"]:
                     for room in day["rooms"].values():
                         for talk in room:
-                            start = datetime.strptime(
+                            start = event_tz.localize(datetime.strptime(
                                 talk["date"][:19], "%Y-%m-%dT%H:%M:%S"
-                            ).replace(tzinfo=event_tz)
+                            ))
                             d_h, d_m = talk["duration"].split(":")
                             end = start + timedelta(hours=int(d_h), minutes=int(d_m))
 
-                            talk["start_ts"] = int(timegm(start.timetuple()) - utc_offset)
+                            talk["start_ts"] = int(timegm(start.timetuple()) - start.utcoffset().total_seconds())
                             talk["start_str"] = talk["start"]
-                            talk["end_ts"] = int(timegm(end.timetuple()) - utc_offset)
+                            talk["end_ts"] = int(timegm(end.timetuple()) - end.utcoffset().total_seconds())
                             talk["locale"] = talk["language"]
 
                             track = None
