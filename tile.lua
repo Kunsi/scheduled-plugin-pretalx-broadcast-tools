@@ -227,16 +227,26 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
             end
         end
 
-        if show_track and current_talk.track ~= json.null then
-            local r,g,b,_ = rgba(default_color, 1)
-            if current_talk.track.color ~= json.null then
-                r,g,b = helper.parse_rgb(current_talk.track["color"])
-            end
+        if show_track and current_talk.track ~= json.null and current_talk.track.color ~= json.null then
+            local r,g,b = helper.parse_rgb(current_talk.track["color"])
+
             if track_text then
-                if a.height > y + 20 + track_size then
-                    text(font_track, col2, y+20, current_talk.track.name, track_size, r,g,b,1)
+                if a.height > y + 30 + track_size then
+                    local brightness = math.max(r,g,b)
+                    local track_width = font_track:width(current_talk.track.name, track_size)
+
+                    a.add(anims.moving_image_raw(
+                        S, E, resource.create_colored_texture(r,g,b,1),
+                        col2, y + 20,
+                        col2 + track_width + 10, y + track_size + 30
+                    ))
+                    if brightness > 0.6 then
+                        text(font_track, col2+5, y+25, current_talk.track.name, track_size, 0,0,0,1)
+                    else
+                        text(font_track, col2+5, y+25, current_talk.track.name, track_size, 1,1,1,1)
+                    end
                 end
-            elseif current_talk.track.color ~= json.null then
+            else
                 a.add(anims.moving_image_raw(
                     S, E, resource.create_colored_texture(r,g,b,1),
                     col2 - 25, 0,
