@@ -140,15 +140,23 @@ def main():
                 for day in raw_schedule["conference"]["days"]:
                     for room in day["rooms"].values():
                         for talk in room:
-                            start = event_tz.localize(datetime.strptime(
-                                talk["date"][:19], "%Y-%m-%dT%H:%M:%S"
-                            ))
+                            start = event_tz.localize(
+                                datetime.strptime(
+                                    talk["date"][:19], "%Y-%m-%dT%H:%M:%S"
+                                )
+                            )
                             d_h, d_m = talk["duration"].split(":")
                             end = start + timedelta(hours=int(d_h), minutes=int(d_m))
 
-                            talk["start_ts"] = int(timegm(start.timetuple()) - start.utcoffset().total_seconds())
+                            talk["start_ts"] = int(
+                                timegm(start.timetuple())
+                                - start.utcoffset().total_seconds()
+                            )
                             talk["start_str"] = talk["start"]
-                            talk["end_ts"] = int(timegm(end.timetuple()) - end.utcoffset().total_seconds())
+                            talk["end_ts"] = int(
+                                timegm(end.timetuple())
+                                - end.utcoffset().total_seconds()
+                            )
                             talk["locale"] = talk["language"]
 
                             track = None
