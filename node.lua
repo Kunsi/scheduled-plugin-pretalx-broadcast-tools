@@ -4,6 +4,11 @@ local TOPBAR_FONT_SIZE = 70
 local TALK_FONT_SIZE = 50
 local PADDING = 20
 
+if NATIVE_HEIGHT > 1200 then
+    TOPBAR_FONT_SIZE = 140
+    TALK_FONT_SIZE = 100
+end
+
 local font_clock
 local font_day
 local font_room
