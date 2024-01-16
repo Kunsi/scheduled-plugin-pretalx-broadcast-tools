@@ -20,7 +20,7 @@ def log(msg):
     sys.stderr.write("[pretalx] {}\n".format(msg))
 
 
-def idle(seconds, event_start, event_tz):
+def idle(seconds, event_start, event_end, event_tz):
     end = time.time() + seconds
     log("sleeping for {} seconds".format(seconds))
     while time.time() < end:
@@ -45,6 +45,14 @@ def idle(seconds, event_start, event_tz):
             send_data["clock"] = event_now.strftime(config["clock_format"])
             send_data["day"] = day_info.days
 
+            # "single day" is only used in standalone mode to hide the
+            # the day information
+            if event_end is not None:
+                if event_start == event_end:
+                    send_data["single_day"] = 1
+                else:
+                    send_data["single_day"] = 0
+
         for k, v in send_data.items():
             node.send_raw("{}/{}:{}".format(SEND_PREFIX, k, v))
         time.sleep(1)
@@ -53,6 +61,7 @@ def idle(seconds, event_start, event_tz):
 def main():
     event_info = None
     event_start = None
+    event_end = None
     schedule = None
     event_tz = pytz.utc
 
@@ -84,6 +93,7 @@ def main():
 
             if event_info is not None:
                 event_start = datetime.strptime(event_info["start"], "%Y-%m-%d")
+                event_end = datetime.strptime(event_info["end"], "%Y-%m-%d")
                 event_tz = pytz.timezone(event_info["timezone"])
 
             try:
@@ -135,6 +145,9 @@ def main():
                 event_start = datetime.strptime(
                     raw_schedule["conference"]["start"][:10], "%Y-%m-%d"
                 )
+                event_end = datetime.strptime(
+                    raw_schedule["conference"]["end"][:10], "%Y-%m-%d"
+                )
                 event_tz = pytz.timezone(raw_schedule["conference"]["time_zone_name"])
 
                 for day in raw_schedule["conference"]["days"]:
@@ -181,7 +194,7 @@ def main():
         else:
             log("unknown json flavour, something is very wrong")
 
-        idle(30, event_start, event_tz)
+        idle(30, event_start, event_end, event_tz)
 
 
 if __name__ == "__main__":

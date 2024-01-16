@@ -24,6 +24,7 @@ local tracks = {}
 local all_next_talks = {}
 local show_language = true
 local show_track = true
+local is_single_day = false
 local hide_talks_older_than_minutes = 25
 
 gl.setup(NATIVE_WIDTH, NATIVE_HEIGHT)
@@ -63,6 +64,12 @@ util.data_mapper{
             clock = data
         elseif path == "time" then
             time = tonumber(data)
+        elseif path == "single_day" then
+            if tostring(data) == "1" then
+                is_single_day = true
+            else
+                is_single_day = false
+            end
         end
     end,
 }
@@ -126,7 +133,9 @@ function node.render()
     gl.clear(0, 0, 0, 1)
 
     y = PADDING
-    font_day:write(PADDING, y, string.format("Day %d", day), TOPBAR_FONT_SIZE, 1, 1, 1, 1)
+    if not is_single_day then
+        font_day:write(PADDING, y, string.format("Day %d", day), TOPBAR_FONT_SIZE, 1, 1, 1, 1)
+    end
 
     local clock_width = font_clock:width(clock, TOPBAR_FONT_SIZE)
     font_clock:write(NATIVE_WIDTH-PADDING-clock_width, y, clock, TOPBAR_FONT_SIZE, 1, 1, 1, 1)
