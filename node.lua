@@ -138,41 +138,43 @@ function node.render()
     local track_x = 0
     local track_y = NATIVE_HEIGHT - PADDING*0.3
     local space_used_for_tracks = 0
-    for idx = 1, #tracks do
-        track = tracks[idx]
-        if track.color ~= json.null then
-            r,g,b = parse_rgb(track.color)
-            local track_width = font_track:width(track.name, info_size)
-            local brightness = math.max(r, g, b)
-            if track_x - track_width < PADDING then
-                track_x = NATIVE_WIDTH - PADDING
-                track_y = track_y - info_size - PADDING
-                space_used_for_tracks = space_used_for_tracks + 1
-            end
-            resource.create_colored_texture(r,g,b,1):draw(
-                track_x - track_width - PADDING*0.3,
-                track_y - PADDING*0.3,
-                track_x + PADDING*0.3,
-                track_y + info_size + PADDING*0.3
-            )
-            if brightness > 0.6 then
-                font_track:write(
-                    track_x - track_width,
-                    track_y,
-                    track.name,
-                    info_size,
-                    0, 0, 0, 1
+    if show_track then
+        for idx = 1, #tracks do
+            track = tracks[idx]
+            if track.color ~= json.null then
+                r,g,b = parse_rgb(track.color)
+                local track_width = font_track:width(track.name, info_size)
+                local brightness = math.max(r, g, b)
+                if track_x - track_width < PADDING then
+                    track_x = NATIVE_WIDTH - PADDING
+                    track_y = track_y - info_size - PADDING
+                    space_used_for_tracks = space_used_for_tracks + 1
+                end
+                resource.create_colored_texture(r,g,b,1):draw(
+                    track_x - track_width - PADDING*0.3,
+                    track_y - PADDING*0.3,
+                    track_x + PADDING*0.3,
+                    track_y + info_size + PADDING*0.3
                 )
-            else
-                font_track:write(
-                    track_x - track_width,
-                    track_y,
-                    track.name,
-                    info_size,
-                    1, 1, 1, 1
-                )
+                if brightness > 0.6 then
+                    font_track:write(
+                        track_x - track_width,
+                        track_y,
+                        track.name,
+                        info_size,
+                        0, 0, 0, 1
+                    )
+                else
+                    font_track:write(
+                        track_x - track_width,
+                        track_y,
+                        track.name,
+                        info_size,
+                        1, 1, 1, 1
+                    )
+                end
+                track_x = track_x - track_width - PADDING
             end
-            track_x = track_x - track_width - PADDING
         end
     end
 
@@ -229,7 +231,7 @@ function node.render()
         font_text:write(col2 - 15 - PADDING - time_width, y, talk_time, time_size, 1, 1, 1, 1)
 
         -- track
-        if talk.track ~= json.null and talk.track.color ~= json.null then
+        if show_track and talk.track ~= json.null and talk.track.color ~= json.null then
             local r,g,b = parse_rgb(talk.track.color)
             resource.create_colored_texture(r,g,b,1):draw(col2 - 5 - PADDING, y, col2 - 10, y + #title_lines*TALK_FONT_SIZE + 3 + #info_lines*info_size)
         end
