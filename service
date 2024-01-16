@@ -98,13 +98,24 @@ def main():
                 # we need.
             else:
                 schedule = r.json()
-                schedule["tracks"] = []
+                tracks = {}
                 for talk in schedule["talks"]:
                     talk["start_str"] = (
                         datetime.fromtimestamp(talk["start_ts"])
                         .replace(tzinfo=pytz.utc)
                         .astimezone(event_tz)
                         .strftime("%H:%M")
+                    )
+                    if talk["track"]:
+                        if talk["track"]["name"] not in tracks:
+                            tracks[talk["track"]["name"]] = talk["track"]["color"]
+                schedule["tracks"] = []
+                for name, color in sorted(tracks.items()):
+                    schedule["tracks"].append(
+                        {
+                            "name": name,
+                            "color": color,
+                        }
                     )
                 node.write_json("schedule.json", schedule)
                 log("updated schedule json")
