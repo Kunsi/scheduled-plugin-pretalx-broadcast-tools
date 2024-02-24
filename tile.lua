@@ -20,6 +20,8 @@ local room_next_talks = {}
 local current_room
 local text_a
 local text_b
+local image_a
+local image_b
 local day = 0
 local time = 0
 local clock = "??"
@@ -69,6 +71,8 @@ function M.updated_config_json(config)
             current_room = room.name
             text_a = room.text_a
             text_b = room.text_b
+            image_a = resource.load_image(room.image_a)
+            image_b = resource.load_image(room.image_b)
         end
     end
 end
@@ -491,7 +495,8 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
     local animate = config.info_animate or true
     local default_color = {helper.parse_rgb(config.color or "#ffffff")}
     local r,g,b = helper.parse_rgb(config.color or "#ffffff")
-    local text_source = config.info_text_source or "a"
+    -- keep this as "info_text_source" to not break existing setups
+    local info_source = config.info_text_source or "a"
 
     local a = anims.Area(x2 - x1, y2 - y1)
 
@@ -502,43 +507,22 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
         return a.add(anims.moving_font(S, E, ...))
     end
 
-    local info_text = text_a
-    if text_source == "b" then
-        info_text = text_b
+    local info_mode = "text"
+    local info_content = text_a
+    if info_source == "b" then
+        info_content = text_b
+    elseif info_source == "image_a" then
+        info_mode = "image"
+        info_content = image_a
+    elseif info_source == "image_b" then
+        info_mode = "image"
+        info_content = image_b
     end
 
-    local y = 0
-    for line in string.gmatch(info_text.."\n", "([^\n]*)\n") do
-        if line ~= "" then
-            local lines = wrap(
-                line,
-                font_text, font_size, a.width
-            )
-
-            for idx = 1, #lines do
-                local x = 0
-                local w = font_text:width(lines[idx], font_size)
-
-                if align == "right" then
-                    x = a.width - w
-                elseif align == "center" then
-                    x = (a.width - w) / 2
-                end
-
-                text(font_text, x, y, lines[idx], font_size, rgba(default_color,.8))
-                y = y + font_size
-            end
-        else
-            y = y + font_size*0.5
-        end
-    end
-
-    for now in api.frame_between(starts, ends) do
-        if animate then
-            a.draw(now, x1, y1, x2, y2)
-        else
-            local y = 0
-            for line in string.gmatch(info_text.."\n", "([^\n]*)\n") do
+    if info_mode == "text" then
+        local y = 0
+        for line in string.gmatch(info_content.."\n", "([^\n]*)\n") do
+            if line ~= "" then
                 local lines = wrap(
                     line,
                     font_text, font_size, a.width
@@ -554,9 +538,48 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
                         x = (a.width - w) / 2
                     end
 
-                    font_text:write(x, y, lines[idx], font_size, r,g,b,1)
+                    text(font_text, x, y, lines[idx], font_size, rgba(default_color,.8))
                     y = y + font_size
                 end
+            else
+                y = y + font_size*0.5
+            end
+        end
+
+        for now in api.frame_between(starts, ends) do
+            if animate then
+                a.draw(now, x1, y1, x2, y2)
+            else
+                local y = 0
+                for line in string.gmatch(info_content.."\n", "([^\n]*)\n") do
+                    local lines = wrap(
+                        line,
+                        font_text, font_size, a.width
+                    )
+
+                    for idx = 1, #lines do
+                        local x = 0
+                        local w = font_text:width(lines[idx], font_size)
+
+                        if align == "right" then
+                            x = a.width - w
+                        elseif align == "center" then
+                            x = (a.width - w) / 2
+                        end
+
+                        font_text:write(x, y, lines[idx], font_size, r,g,b,1)
+                        y = y + font_size
+                    end
+                end
+            end
+        end
+    else
+        a.moving_image(S, E, info_content, x1, y1, x2, y2)
+        for now in api.frame_between(starts, ends) do
+            if animate then
+                a.draw(now, x1, y1, x2, y2)
+            else
+                util.draw_correct(info_content, x1, y1, x2, y2)
             end
         end
     end

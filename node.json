@@ -126,6 +126,22 @@
             "hint": "Room-Specific text B",
             "rows": 6,
             "default": ""
+        }, {
+            "title": "Image A",
+            "ui_width": 6,
+            "name": "image_a",
+            "hint": "Room-Specific image A",
+            "type": "resource",
+            "valid": ["image"],
+            "default": "empty.png"
+        }, {
+            "title": "Image B",
+            "ui_width": 6,
+            "name": "image_b",
+            "hint": "Room-Specific image B",
+            "type": "resource",
+            "valid": ["image"],
+            "default": "empty.png"
         }]
     }]
 }
