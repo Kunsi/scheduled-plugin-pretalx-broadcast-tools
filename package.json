@@ -1,7 +1,7 @@
 {
-    "name": "pretalx-broadcast-tools",
+    "name": "Fahrplan schedule.json",
     "author": "git@kunsmann.eu",
-    "desc": "Shows information provided by pretalx-broadcast-tools",
+    "desc": "Shows information provided by pretalx-broadcast-tools or a schema-compatible schedule.json",
     "nesting": {
         "parents": ["scheduled-plugin", "top-level"],
         "childs": []

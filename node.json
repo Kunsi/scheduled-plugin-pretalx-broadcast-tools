@@ -1,5 +1,5 @@
 {
-    "name": "Plugin: pretalx-broadcast-tools",
+    "name": "Plugin: schedule.json",
     "permissions": {
         "network": "Has to fetch schedule from remote site"
     },
@@ -79,10 +79,10 @@
         "ui_width": 12,
         "name": "json_flavour",
         "type": "select",
-        "default": "pretalx-broadcast-tools",
+        "default": "voc-schema",
         "options": [
             ["pretalx-broadcast-tools", "pretalx-broadcast-tools (input event URL below)"],
-            ["voc-schema", "C3VOC JSON schema compatible (input JSON URL below)"]
+            ["voc-schema", "schema-compatible JSON (input JSON URL below)"]
         ]
     }, {
         "title": "Schedule URL",

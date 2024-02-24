@@ -1,9 +1,10 @@
-# pretalx-broadcast-tools plugin for the info-beamer 'scheduled-player' package
+# schedule.json plugin for the info-beamer 'scheduled-player' package
 
-Please note this plugin requires you to install
+Please note this plugin requires you to install either
 [pretalx-broadcast-tools >= 2.1.0](https://github.com/Kunsi/pretalx-plugin-broadcast-tools)
-to your pretalx instance. This plugin will not work with a vanilla
-pretalx installation!
+or have something else to generate a schema-compatible `schedule.json`
+file (which is available from
+[pretalx >= 2024.1.0](https://github.com/pretalx/pretalx))
 
 [Import this package to info-beamer.com](https://info-beamer.com/use?url=https%3A%2F%2Fgithub.com%2FKunsi%2Fscheduled-plugin-pretalx-broadcast-tools.git)
 
