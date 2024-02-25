@@ -133,7 +133,7 @@ var config = {
         <h4>Info options</h4>
         <div class='row'>
           <div class='col-xs-3'>
-            Alignment<br/>
+            Text Alignment<br/>
             <select class='btn btn-default' v-model="info_align">
               <option value="left">Align left</option>
               <option value="center">Align centered</option>
@@ -141,7 +141,7 @@ var config = {
             </select>
           </div>
           <div class='col-xs-3'>
-            Text source<br/>
+            Info source<br/>
             <select class='btn btn-default' v-model="info_text_source">
               <option value="a">Text A</option>
               <option value="b">Text B</option>
