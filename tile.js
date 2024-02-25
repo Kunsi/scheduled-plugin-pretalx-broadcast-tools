@@ -145,6 +145,8 @@ var config = {
             <select class='btn btn-default' v-model="info_text_source">
               <option value="a">Text A</option>
               <option value="b">Text B</option>
+              <option value="image_a">Image A</option>
+              <option value="image_b">Image B</option>
             </select>
           </div>
           <div class='col-xs-3'>
