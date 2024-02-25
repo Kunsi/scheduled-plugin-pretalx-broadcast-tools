@@ -71,8 +71,12 @@ function M.updated_config_json(config)
             current_room = room.name
             text_a = room.text_a
             text_b = room.text_b
-            image_a = resource.load_image(room.image_a)
-            image_b = resource.load_image(room.image_b)
+            image_a = resource.load_image{
+                file = room.image_a.asset_name
+            }
+            image_b = resource.load_image{
+                file = room.image_b.asset_name
+            }
         end
     end
 end
@@ -574,7 +578,11 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
             end
         end
     else
-        a.add(a.moving_image_raw(S, E, info_content, x1, y1, x2, y2))
+        a.add(a.moving_image_raw(
+            S, E, info_content,
+            x1, y1,
+            x2, y2
+        ))
         for now in api.frame_between(starts, ends) do
             if animate then
                 a.draw(now, x1, y1, x2, y2)
