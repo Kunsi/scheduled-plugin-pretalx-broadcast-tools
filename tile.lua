@@ -68,14 +68,19 @@ function M.updated_config_json(config)
         log(tostring(room.serial) .. " room '" .. room.name .. "'")
         if room.serial == sys.get_env "SERIAL" then
             log("found my room: " .. room.name)
+            pp(room)
             current_room = room.name
             text_a = room.text_a
             text_b = room.text_b
             image_a = resource.load_image{
-                file = room.image_a.asset_name
+                file = api.localized(room.image_a.asset_name);
+                mipmap = true;
+                nearest = true;
             }
             image_b = resource.load_image{
-                file = room.image_b.asset_name
+                file = api.localized(room.image_b.asset_name);
+                mipmap = true;
+                nearest = true;
             }
         end
     end
@@ -578,17 +583,19 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
             end
         end
     else
+        local w = x2 - x1
+        local h = y2 - y1
         a.add(anims.moving_image(
             S, E, info_content,
-            x1, y1,
-            x2, y2,
+            0, 0,
+            w, h,
             1
         ))
         for now in api.frame_between(starts, ends) do
             if animate then
                 a.draw(now, x1, y1, x2, y2)
             else
-                util.draw_correct(info_content, x1, y1, x2, y2)
+                util.draw_correct(info_content, 0, 0, w, h)
             end
         end
     end
