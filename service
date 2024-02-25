@@ -185,7 +185,9 @@ def main():
 
                             persons = []
                             for p in talk["persons"]:
-                                persons.append(p.get("public_name", p["name"]))
+                                name = p.get("public_name", p.get("name"))
+                                if name:
+                                    persons.append(name)
                             talk["persons"] = persons
 
                             schedule["talks"].append(talk)
