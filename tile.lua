@@ -578,10 +578,11 @@ local function view_info(starts, ends, config, x1, y1, x2, y2)
             end
         end
     else
-        a.add(a.moving_image_raw(
+        a.add(anims.moving_image(
             S, E, info_content,
             x1, y1,
-            x2, y2
+            x2, y2,
+            1
         ))
         for now in api.frame_between(starts, ends) do
             if animate then
