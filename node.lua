@@ -1,14 +1,5 @@
 local json = require "json"
 
-local TOPBAR_FONT_SIZE = 70
-local TALK_FONT_SIZE = 50
-local PADDING = 20
-
-if NATIVE_HEIGHT > 1200 then
-    TOPBAR_FONT_SIZE = 140
-    TALK_FONT_SIZE = 100
-end
-
 local font_clock
 local font_day
 local font_room
@@ -26,6 +17,9 @@ local show_language = true
 local show_track = true
 local is_single_day = false
 local hide_talks_older_than_minutes = 25
+local TOPBAR_FONT_SIZE = 70
+local TALK_FONT_SIZE = 50
+local PADDING = 20
 
 gl.setup(NATIVE_WIDTH, NATIVE_HEIGHT)
 
@@ -46,6 +40,10 @@ util.file_watch("config.json", function(content)
     show_language = config.show_language
     show_track = config.show_track
     hide_talks_older_than_minutes = config.hide_talks_older_than_minutes
+
+    TOPBAR_FONT_SIZE = config.standalone_topbar_size
+    TALK_FONT_SIZE = config.standalone_talk_size
+    PADDING = config.standalone_padding
 
     font_clock = resource.load_font(config.font_clock.asset_name)
     font_day = resource.load_font(config.font_day.asset_name)

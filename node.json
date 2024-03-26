@@ -143,5 +143,29 @@
             "valid": ["image"],
             "default": "empty.png"
         }]
+    }, {
+        "title": "Standalone Options (IGNORED in scheduled-player)",
+        "type": "section"
+    }, {
+        "title": "Topbar Font Size",
+        "ui_width": 4,
+        "name": "standalone_topbar_size",
+        "type": "integer",
+        "default": 70,
+        "hint": "Font size for the header content (clock and day)"
+    }, {
+        "title": "Talk Font Size",
+        "ui_width": 4,
+        "name": "standalone_talk_size",
+        "type": "integer",
+        "default": 50,
+        "hint": "Font size for talk titles. Room name and speaker names will use 80% of that."
+    }, {
+        "title": "Padding",
+        "ui_width": 4,
+        "name": "standalone_padding",
+        "type": "integer",
+        "default": 20,
+        "hint": "Padding to the screen edge and between all content"
     }]
 }
