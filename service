@@ -202,6 +202,9 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except:
+    except Exception:
         traceback.print_exc()
-        time.sleep(30)
+        try:
+            idle(30, None, None, None)
+        except Exception:
+            time.sleep(30)
