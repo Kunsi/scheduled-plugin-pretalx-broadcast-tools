@@ -139,7 +139,7 @@ local function check_next_talks()
         -- to announce these.
         if talk.end_ts > time and talk.start_ts > min_start then
             -- is this in *this* room, or somewhere else?
-            if current_room and talk.room == current_room then
+            if current_room and (talk.room == current_room or talk.room_uuid == current_room) then
                 room_next_talks[#room_next_talks+1] = talk
             end
             all_next_talks[#all_next_talks+1] = talk

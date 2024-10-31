@@ -91,10 +91,13 @@ def main():
             else:
                 event_info = r.json()
 
+            room_uuid_mapping = {}
             if event_info is not None:
                 event_start = datetime.strptime(event_info["start"], "%Y-%m-%d")
                 event_end = datetime.strptime(event_info["end"], "%Y-%m-%d")
                 event_tz = pytz.timezone(event_info["timezone"])
+                for uuid, room_name in event_info.get("rooms", {}).items():
+                    room_uuid_mapping[room_name] = uuid
 
             try:
                 r = get(
@@ -116,6 +119,7 @@ def main():
                         .astimezone(event_tz)
                         .strftime("%H:%M")
                     )
+                    talk["room_uuid"] = room_uuid_mapping.get("room")
                     if talk["track"]:
                         if talk["track"]["name"] not in tracks:
                             tracks[talk["track"]["name"]] = talk["track"]["color"]
@@ -141,6 +145,10 @@ def main():
                     "tracks": raw_schedule["conference"]["tracks"],
                     "talks": [],
                 }
+
+                room_uuid_mapping = {}
+                for room in raw_schedule["conference"]["rooms"]:
+                    room_uuid_mapping[room["name"]] = room["guid"]
 
                 event_start = datetime.strptime(
                     raw_schedule["conference"]["start"][:10], "%Y-%m-%d"
@@ -182,6 +190,8 @@ def main():
                                         }
                                         break
                             talk["track"] = track
+
+                            talk["room_uuid"] = room_uuid_mapping.get(talk["room"])
 
                             persons = []
                             for p in talk["persons"]:
