@@ -91,6 +91,11 @@ function M.updated_schedule_json(new_schedule)
     schedule = new_schedule.talks
 end
 
+function M.updated_uuid_json(new_uuids)
+    log("new room uuid mapping")
+    rooms = new_uuids
+end
+
 local function wrap(str, font, size, max_w)
     local lines = {}
     local space_w = font:width(" ", size)
@@ -395,20 +400,25 @@ local function view_room(starts, ends, config, x1, y1, x2, y2)
         return a.add(anims.moving_font(S, E, ...))
     end
 
+    local room_name = current_room;
+    if rooms[current_room] ~= nil then
+        room_name = rooms[current_room]
+    end
+
     local x = 0
-    local w = font_room:width(current_room, font_size)
+    local w = font_room:width(room_name, font_size)
     if align == "right" then
         x = a.width - w
     elseif align == "center" then
         x = (a.width - w) / 2
     end
-    text(font_room, x, 0, current_room, font_size, rgba(default_color,1))
+    text(font_room, x, 0, room_name, font_size, rgba(default_color,1))
 
     for now in api.frame_between(starts, ends) do
         if animate then
             a.draw(now, x1, y1, x2, y2)
         else
-            font_room:write(x1+x, y1, current_room, font_size, r,g,b,1)
+            font_room:write(x1+x, y1, room_name, font_size, r,g,b,1)
         end
     end
 end

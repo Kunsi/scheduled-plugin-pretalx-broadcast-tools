@@ -67,11 +67,14 @@ def main():
 
     while True:
         schedule_url = config["schedule_url"]
+        room_uuid_mapping = {}
+
         if "example.com" in schedule_url:
             log("default schedule url, waiting for config update")
             # sleep forever, service will get restarted if the config
             # changes.
             time.sleep(99999999)
+
         log("event url: {}".format(schedule_url))
         log("using json flavour: {}".format(config["json_flavour"]))
 
@@ -91,7 +94,6 @@ def main():
             else:
                 event_info = r.json()
 
-            room_uuid_mapping = {}
             if event_info is not None:
                 event_start = datetime.strptime(event_info["start"], "%Y-%m-%d")
                 event_end = datetime.strptime(event_info["end"], "%Y-%m-%d")
@@ -146,7 +148,6 @@ def main():
                     "talks": [],
                 }
 
-                room_uuid_mapping = {}
                 for room in raw_schedule["conference"]["rooms"]:
                     room_uuid_mapping[room["name"]] = room["guid"]
 
@@ -205,6 +206,8 @@ def main():
                 log("updated schedule json")
         else:
             log("unknown json flavour, something is very wrong")
+
+        node.write_json("uuid.json", room_uuid_mapping)
 
         idle(30, event_start, event_end, event_tz)
 
