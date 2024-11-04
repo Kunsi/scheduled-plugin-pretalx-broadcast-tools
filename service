@@ -207,7 +207,10 @@ def main():
         else:
             log("unknown json flavour, something is very wrong")
 
-        node.write_json("uuid.json", room_uuid_mapping)
+        uuid_json = {}
+        for name, uuid in room_uuid_mapping.items():
+            uuid_json[uuid] = name
+        node.write_json("uuid.json", uuid_json)
 
         idle(30, event_start, event_end, event_tz)
 
