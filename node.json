@@ -43,6 +43,35 @@
         "type": "font",
         "default": "silkscreen.ttf"
     }, {
+        "title": "Standalone Options",
+        "type": "section",
+        "name": "top_level_config",
+        "condition": ["node", "is_top_level"]
+    }, {
+        "title": "Topbar Font Size",
+        "ui_width": 4,
+        "name": "standalone_topbar_size",
+        "condition": ["config", "top_level_config"],
+        "type": "integer",
+        "default": 70,
+        "hint": "Font size for the header content (clock and day)"
+    }, {
+        "title": "Talk Font Size",
+        "ui_width": 4,
+        "name": "standalone_talk_size",
+        "condition": ["config", "top_level_config"],
+        "type": "integer",
+        "default": 50,
+        "hint": "Font size for talk titles. Room name and speaker names will use 80% of that."
+    }, {
+        "title": "Padding",
+        "ui_width": 4,
+        "name": "standalone_padding",
+        "condition": ["config", "top_level_config"],
+        "type": "integer",
+        "default": 20,
+        "hint": "Padding to the screen edge and between all content"
+    }, {
         "title": "Design",
         "type": "section"
     }, {
@@ -92,11 +121,16 @@
         "default": "https://pretalx.example.com/my-super-cool-event/"
     }, {
         "title": "Rooms",
+        "type": "section",
+        "condition": ["!", ["config", "top_level_config"]],
+        "intro": "You can configure which device should be assigned to which room, so each device can show room-specific content. Devices which do not have a room set will still show content like 'all talks', but skip any pages which have room-specific content assigned."
+    }, {
+        "title": "Rooms",
         "name": "rooms",
         "doc_link": true,
         "type": "list",
+        "condition": ["!", ["config", "top_level_config"]],
         "itemname": "Room",
-        "hint": "Define all rooms in your schedule and assign them to devices",
         "items": [{
             "title": "Room Name or UUID",
             "ui_width": 6,
@@ -143,29 +177,5 @@
             "valid": ["image"],
             "default": "empty.png"
         }]
-    }, {
-        "title": "Standalone Options (IGNORED in scheduled-player)",
-        "type": "section"
-    }, {
-        "title": "Topbar Font Size",
-        "ui_width": 4,
-        "name": "standalone_topbar_size",
-        "type": "integer",
-        "default": 70,
-        "hint": "Font size for the header content (clock and day)"
-    }, {
-        "title": "Talk Font Size",
-        "ui_width": 4,
-        "name": "standalone_talk_size",
-        "type": "integer",
-        "default": 50,
-        "hint": "Font size for talk titles. Room name and speaker names will use 80% of that."
-    }, {
-        "title": "Padding",
-        "ui_width": 4,
-        "name": "standalone_padding",
-        "type": "integer",
-        "default": 20,
-        "hint": "Padding to the screen edge and between all content"
     }]
 }
