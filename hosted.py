@@ -397,7 +397,12 @@ class Configuration(object):
         def parse_recursive(options, config, target):
             # print 'parsing', config
             for option in options:
-                if not 'name' in option:
+                # we're using the newly added 'conditions' feature of info-beamer
+                # which is currently not properly supported by hosted.py - that's
+                # why we ignore any options that are missing from the config. The
+                # downstream code must be written so that it only uses options we
+                # actually provide via the conditions.
+                if not 'name' in option or option['name'] not in config:
                     continue
                 if option['type'] == 'list':
                     items = []
