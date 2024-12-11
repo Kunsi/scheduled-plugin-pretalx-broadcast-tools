@@ -20,7 +20,7 @@ def log(msg):
     sys.stderr.write("[pretalx] {}\n".format(msg))
 
 
-def idle(seconds, event_start, event_end, event_tz):
+def idle(seconds, event_start, event_end, event_tz, event_days):
     end = time.time() + seconds
     log("sleeping for {} seconds".format(seconds))
     while time.time() < end:
@@ -31,19 +31,36 @@ def idle(seconds, event_start, event_end, event_tz):
         }
         if event_start is not None:
             event_now = datetime.now(event_tz)
-            utc_now = datetime.now(pytz.utc)
+            event_day = None
 
-            day_zero = event_tz.localize(
-                event_start.replace(hour=0, minute=0, second=0)
-            ) - timedelta(days=1)
-
-            day_info = event_now - day_zero
-
-            log("Day0: {}".format(day_zero.isoformat()))
-            log("NOW:  {}".format(event_now.isoformat()))
-
+            log("event_now = {}".format(event_now.isoformat()))
             send_data["clock"] = event_now.strftime(config["clock_format"])
-            send_data["day"] = day_info.days
+
+            for day in event_days:
+                if day["starts"] <= event_now <= day["ends"]:
+                    log("Today is day {} according to schedule".format(day["index"]))
+                    event_day = day["index"]
+
+            if event_day is None:
+                log(
+                    "Schedule does not contain information for this day, calculating using event start time"
+                )
+                utc_now = datetime.now(pytz.utc)
+
+                day_zero = event_tz.localize(
+                    event_start.replace(hour=0, minute=0, second=0)
+                ) - timedelta(days=1)
+
+                day_info = event_now - day_zero
+
+                log(
+                    "Today is day {}, based on day zero at {}".format(
+                        day_info.days, day_zero.isoformat()
+                    )
+                )
+
+                event_day = day_info.days
+            send_data["day"] = event_day
 
             # "single day" is only used in standalone mode to hide the
             # the day information
@@ -68,6 +85,7 @@ def main():
     while True:
         schedule_url = config["schedule_url"]
         room_uuid_mapping = {}
+        event_days = []
 
         if "example.com" in schedule_url:
             log("default schedule url, waiting for config update")
@@ -160,6 +178,22 @@ def main():
                 event_tz = pytz.timezone(raw_schedule["conference"]["time_zone_name"])
 
                 for day in raw_schedule["conference"]["days"]:
+                    event_days.append(
+                        {
+                            "index": day["index"],
+                            "starts": event_tz.localize(
+                                datetime.strptime(
+                                    day["day_start"][:19], "%Y-%m-%dT%H:%M:%S"
+                                )
+                            ),
+                            "ends": event_tz.localize(
+                                datetime.strptime(
+                                    day["day_end"][:19], "%Y-%m-%dT%H:%M:%S"
+                                )
+                            ),
+                        }
+                    )
+
                     for room in day["rooms"].values():
                         for talk in room:
                             start = event_tz.localize(
@@ -212,7 +246,7 @@ def main():
             uuid_json[uuid] = name
         node.write_json("uuid.json", uuid_json)
 
-        idle(30, event_start, event_end, event_tz)
+        idle(30, event_start, event_end, event_tz, event_days)
 
 
 if __name__ == "__main__":
