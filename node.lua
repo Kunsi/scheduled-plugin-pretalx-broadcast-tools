@@ -96,12 +96,6 @@ local function check_next_talks()
             all_next_talks[#all_next_talks+1] = talk
         end
     end
-
-    local function sort_talks(a, b)
-        return a.start_ts < b.start_ts or (a.start_ts == b.start_ts and a.room < b.room)
-    end
-
-    table.sort(all_next_talks, sort_talks)
 end
 
 local function wrap(str, font, size, max_w)

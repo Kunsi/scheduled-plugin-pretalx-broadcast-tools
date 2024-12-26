@@ -151,13 +151,6 @@ local function check_next_talks()
         end
     end
 
-    local function sort_talks(a, b)
-        return a.start_ts < b.start_ts or (a.start_ts == b.start_ts and a.room < b.room)
-    end
-
-    table.sort(room_next_talks, sort_talks)
-    table.sort(all_next_talks, sort_talks)
-
     log(tostring(#all_next_talks) .. " talks to come")
     log(tostring(#room_next_talks) .. " in this room")
 end

@@ -151,6 +151,7 @@ def main():
                             "color": color,
                         }
                     )
+                schedule["talks"] = sorted(schedule["talks"], key=lambda t: t["start_ts"])
                 node.write_json("schedule.json", schedule)
                 log("updated schedule json")
         elif config["json_flavour"] == "voc-schema":
@@ -236,6 +237,7 @@ def main():
                             talk["persons"] = persons
 
                             schedule["talks"].append(talk)
+                schedule["talks"] = sorted(schedule["talks"], key=lambda t: t["start_ts"])
                 node.write_json("schedule.json", schedule)
                 log("updated schedule json")
         else:
