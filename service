@@ -157,7 +157,7 @@ def main():
                         .astimezone(event_tz)
                         .strftime("%H:%M")
                     )
-                    talk["room_uuid"] = room_uuid_mapping.get("room")
+                    talk["room_uuid"] = room_uuid_mapping.get(talk["room"])
                     if talk["track"]:
                         if talk["track"]["name"] not in tracks:
                             tracks[talk["track"]["name"]] = talk["track"]["color"]
