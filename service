@@ -16,6 +16,22 @@ config.restart_on_update()
 SEND_PREFIX = os.environ["NODE"].replace("root/", "root/plugin/")
 
 
+class TalkSorter(object):
+    def __init__(self, obj):
+        self.obj = obj
+
+    def __lt__(self, other):
+        if not isinstance(other, TalkSorter) or "start_ts" not in other.obj:
+            raise ValueError("TalkSorter can only compare talk dicts")
+        if (
+            "room_idx" in self.obj
+            and "room_idx" in other.obj
+            and self.obj["start_ts"] == other.obj["start_ts"]
+        ):
+            return self.obj["room_idx"] < other.obj["room_idx"]
+        return self.obj["start_ts"] < other.obj["start_ts"]
+
+
 def log(msg):
     sys.stderr.write("[pretalx] {}\n".format(msg))
 
@@ -151,7 +167,7 @@ def main():
                             "color": color,
                         }
                     )
-                schedule["talks"] = sorted(schedule["talks"], key=lambda t: t["start_ts"])
+                schedule["talks"] = sorted(schedule["talks"], key=TalkSorter)
                 node.write_json("schedule.json", schedule)
                 log("updated schedule json")
         elif config["json_flavour"] == "voc-schema":
@@ -195,7 +211,7 @@ def main():
                         }
                     )
 
-                    for room in day["rooms"].values():
+                    for room_idx, (room_name, room) in enumerate(day["rooms"].items()):
                         for talk in room:
                             start = event_tz.localize(
                                 datetime.strptime(
@@ -228,6 +244,7 @@ def main():
                             talk["track"] = track
 
                             talk["room_uuid"] = room_uuid_mapping.get(talk["room"])
+                            talk["room_idx"] = room_idx
 
                             persons = []
                             for p in talk["persons"]:
@@ -237,7 +254,7 @@ def main():
                             talk["persons"] = persons
 
                             schedule["talks"].append(talk)
-                schedule["talks"] = sorted(schedule["talks"], key=lambda t: t["start_ts"])
+                schedule["talks"] = sorted(schedule["talks"], key=TalkSorter)
                 node.write_json("schedule.json", schedule)
                 log("updated schedule json")
         else:
