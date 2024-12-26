@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 
 import pytz
 from requests import get
+from json import JSONDecoder
+from collections import OrderedDict
 
 from hosted import config, node
 
@@ -146,7 +148,7 @@ def main():
                 # info json blob atleast once, we have all the information
                 # we need.
             else:
-                schedule = r.json()
+                schedule = JSONDecoder(object_pairs_hook=OrderedDict).decode(r.text)
                 tracks = {}
                 for talk in schedule["talks"]:
                     talk["start_str"] = (
@@ -177,7 +179,7 @@ def main():
             except Exception as e:
                 log("getting schedule.json failed: {}".format(repr(e)))
             else:
-                raw_schedule = r.json()["schedule"]
+                raw_schedule = JSONDecoder(object_pairs_hook=OrderedDict).decode(r.text)["schedule"]
                 schedule = {
                     "tracks": raw_schedule["conference"]["tracks"],
                     "talks": [],
