@@ -158,6 +158,8 @@ def main():
                         .strftime("%H:%M")
                     )
                     talk["room_uuid"] = room_uuid_mapping.get(talk["room"])
+                    if not talk["abstract"]:
+                        talk["abstract"] = ""
                     if talk["track"]:
                         if talk["track"]["name"] not in tracks:
                             tracks[talk["track"]["name"]] = talk["track"]["color"]
@@ -247,6 +249,9 @@ def main():
 
                             talk["room_uuid"] = room_uuid_mapping.get(talk["room"])
                             talk["room_idx"] = room_idx
+
+                            if not talk["abstract"]:
+                                talk["abstract"] = ""
 
                             persons = []
                             for p in talk["persons"]:
