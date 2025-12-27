@@ -12,6 +12,11 @@ local font_text
 local font_track
 local white = resource.create_colored_texture(1,1,1)
 local fallback_track_background = resource.create_colored_texture(.5,.5,.5,1)
+local optout = resource.load_image{
+    file = api.localized("camera-video-off.png");
+    mipmap = true;
+    nearest = true;
+}
 
 local schedule = {}
 local rooms = {}
@@ -204,6 +209,16 @@ local function view_next_talk(starts, ends, config, x1, y1, x2, y2)
 
         local y_time = y+time_size
         text(font_text, col1, y_time, talk_time, time_size, rgba(default_color,1))
+
+        -- show optout icon for talks that are optout
+        if current_talk.do_not_record and a.height > (time_size * 3) then
+            a.add(anims.moving_image(
+                S, E, optout,
+                col1, y + time_size * 2,
+                col1 + time_size, y + time_size * 3,
+                1
+            ))
+        end
 
         -- Title
         local y_start = y
