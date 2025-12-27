@@ -158,6 +158,7 @@ def main():
                         .strftime("%H:%M")
                     )
                     talk["room_uuid"] = room_uuid_mapping.get(talk["room"])
+                    talk["do_not_record"] = talk.get("do_not_record", False)
                     if not talk["abstract"]:
                         talk["abstract"] = ""
                     if talk["track"]:
@@ -246,6 +247,7 @@ def main():
                                         }
                                         break
                             talk["track"] = track
+                            talk["do_not_record"] = talk.get("do_not_record", False)
 
                             talk["room_uuid"] = room_uuid_mapping.get(talk["room"])
                             talk["room_idx"] = room_idx
