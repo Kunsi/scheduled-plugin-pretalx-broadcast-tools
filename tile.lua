@@ -362,6 +362,16 @@ local function view_all_talks(starts, ends, config, x1, y1, x2, y2)
         local time_width = font_text:width(talk_time, time_size)
         text(font_text, col2 - 35 - time_width, y, talk_time, time_size, rgba(default_color, 1))
 
+        -- show optout icon for talks that are optout
+        if talk.do_not_record then
+            a.add(anims.moving_image(
+                S, E, optout,
+                col2 - 35 - info_size, y + time_size,
+                col2 - 35, y + time_size + info_size,
+                1
+            ))
+        end
+
         -- track
         if show_track and talk.track ~= json.null and talk.track.color ~= json.null then
             local r,g,b = helper.parse_rgb(talk.track.color)
