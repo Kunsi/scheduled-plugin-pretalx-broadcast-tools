@@ -21,6 +21,12 @@ local TOPBAR_FONT_SIZE = 70
 local TALK_FONT_SIZE = 50
 local PADDING = 20
 
+local optout = resource.load_image{
+    file = "camera-video-off.png";
+    mipmap = true;
+    nearest = true;
+}
+
 gl.setup(NATIVE_WIDTH, NATIVE_HEIGHT)
 
 local function log(what)
@@ -235,6 +241,14 @@ function node.render()
         end
         local time_width = font_text:width(talk_time, time_size)
         font_text:write(col2 - 15 - PADDING - time_width, y, talk_time, time_size, 1, 1, 1, 1)
+
+        -- show optout icon for talks that are optout
+        if talk.do_not_record then
+            optout:draw(
+                col2 - 35 - info_size, y + time_size,
+                col2 - 35, y + time_size + info_size
+            )
+        end
 
         -- track
         if show_track and talk.track ~= json.null and talk.track.color ~= json.null then
